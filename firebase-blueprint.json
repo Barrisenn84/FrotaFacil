@@ -1,0 +1,207 @@
+{
+  "entities": {
+    "Empresa": {
+      "title": "Empresa",
+      "description": "Entidade raiz multi-empresa com dados cadastrais e parâmetros operacionais",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "nome": { "type": "string" },
+        "cnpj": { "type": "string" },
+        "dataCriacao": { "type": "string", "format": "date-time" },
+        "adminUid": { "type": "string" }
+      },
+      "required": ["id", "nome", "cnpj", "dataCriacao"]
+    },
+    "Veiculo": {
+      "title": "Veiculo",
+      "description": "Veículo da frota controlado pela empresa",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "empresaId": { "type": "string" },
+        "placa": { "type": "string" },
+        "chassi": { "type": "string" },
+        "renavam": { "type": "string" },
+        "marca": { "type": "string" },
+        "modelo": { "type": "string" },
+        "ano": { "type": "number" },
+        "combustivel": { "type": "string" },
+        "capacidadeTanque": { "type": "number" },
+        "kmInicial": { "type": "number", "description": "Odômetro no início do controle pela empresa" },
+        "kmAtual": { "type": "number" },
+        "status": { "type": "string", "enum": ["ativo", "manutencao", "inativo"] },
+        "motoristaAtualId": { "type": "string" }
+      },
+      "required": ["id", "empresaId", "placa", "modelo", "kmInicial", "kmAtual", "status"]
+    },
+    "Motorista": {
+      "title": "Motorista",
+      "description": "Motorista autorizado vinculado à empresa",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "empresaId": { "type": "string" },
+        "uid": { "type": "string" },
+        "nome": { "type": "string" },
+        "email": { "type": "string" },
+        "telefone": { "type": "string" },
+        "cnh": { "type": "string" },
+        "categoriaCnh": { "type": "string" },
+        "validadeCnh": { "type": "string" },
+        "status": { "type": "string", "enum": ["ativo", "inativo"] },
+        "veiculosAutorizados": { "type": "array" }
+      },
+      "required": ["id", "empresaId", "nome", "email", "status"]
+    },
+    "Abastecimento": {
+      "title": "Abastecimento",
+      "description": "Registro de abastecimento auditado",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "empresaId": { "type": "string" },
+        "veiculoId": { "type": "string" },
+        "motoristaId": { "type": "string" },
+        "motoristaUid": { "type": "string" },
+        "data": { "type": "string" },
+        "odometro": { "type": "number" },
+        "posto": { "type": "string" },
+        "combustivel": { "type": "string" },
+        "litros": { "type": "number" },
+        "precoLitro": { "type": "number" },
+        "valorTotal": { "type": "number" },
+        "comprovanteUrl": { "type": "string" },
+        "comprovanteHash": { "type": "string" },
+        "odometroFotoUrl": { "type": "string" },
+        "status": { "type": "string" }
+      },
+      "required": ["id", "empresaId", "veiculoId", "motoristaId", "odometro", "valorTotal", "litros"]
+    },
+    "Manutencao": {
+      "title": "Manutencao",
+      "description": "Registro de manutenção preventiva ou corretiva",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "empresaId": { "type": "string" },
+        "veiculoId": { "type": "string" },
+        "motoristaId": { "type": "string" },
+        "motoristaUid": { "type": "string" },
+        "data": { "type": "string" },
+        "odometro": { "type": "number" },
+        "tipo": { "type": "string", "enum": ["preventiva", "corretiva"] },
+        "oficina": { "type": "string" },
+        "descricao": { "type": "string" },
+        "custoPecas": { "type": "number" },
+        "custoMaoDeObra": { "type": "number" },
+        "valorTotal": { "type": "number" },
+        "status": { "type": "string" }
+      },
+      "required": ["id", "empresaId", "veiculoId", "tipo", "valorTotal"]
+    },
+    "Multa": {
+      "title": "Multa",
+      "description": "Infrações de trânsito associadas a veículos da frota",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "empresaId": { "type": "string" },
+        "veiculoId": { "type": "string" },
+        "motoristaId": { "type": "string" },
+        "data": { "type": "string" },
+        "codigoInfracao": { "type": "string" },
+        "descricao": { "type": "string" },
+        "valor": { "type": "number" },
+        "pontos": { "type": "number" },
+        "status": { "type": "string" }
+      },
+      "required": ["id", "empresaId", "veiculoId", "valor", "descricao"]
+    },
+    "Seguro": {
+      "title": "Seguro",
+      "description": "Apólices de seguro dos veículos",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "empresaId": { "type": "string" },
+        "veiculoId": { "type": "string" },
+        "seguradora": { "type": "string" },
+        "apoliceNumero": { "type": "string" },
+        "inicioVigencia": { "type": "string" },
+        "fimVigencia": { "type": "string" },
+        "valorFranquia": { "type": "number" },
+        "valorPremio": { "type": "number" }
+      },
+      "required": ["id", "empresaId", "veiculoId", "seguradora", "apoliceNumero"]
+    },
+    "DocumentoVeiculo": {
+      "title": "DocumentoVeiculo",
+      "description": "CRLV, laudos e documentos digitais do veículo",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "empresaId": { "type": "string" },
+        "veiculoId": { "type": "string" },
+        "tipo": { "type": "string" },
+        "exercicio": { "type": "number" },
+        "dataEmissao": { "type": "string" },
+        "dataVencimento": { "type": "string" },
+        "arquivoUrl": { "type": "string" }
+      },
+      "required": ["id", "empresaId", "veiculoId", "tipo"]
+    },
+    "PerfilUsuario": {
+      "title": "PerfilUsuario",
+      "description": "Perfil de acesso, empresa associada e papel (admin ou motorista)",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" },
+        "nome": { "type": "string" },
+        "empresaId": { "type": "string" },
+        "papel": { "type": "string", "enum": ["admin", "motorista"] },
+        "criadoEm": { "type": "string" }
+      },
+      "required": ["uid", "email", "empresaId", "papel"]
+    }
+  },
+  "firestore": {
+    "companies/{empresaId}": {
+      "schema": "Empresa",
+      "description": "Documento principal da empresa"
+    },
+    "companies/{empresaId}/vehicles/{vehicleId}": {
+      "schema": "Veiculo",
+      "description": "Veículos sob controle da empresa com kmInicial real"
+    },
+    "companies/{empresaId}/drivers/{driverId}": {
+      "schema": "Motorista",
+      "description": "Motoristas da empresa"
+    },
+    "companies/{empresaId}/fuelings/{fuelingId}": {
+      "schema": "Abastecimento",
+      "description": "Registros de abastecimento da empresa"
+    },
+    "companies/{empresaId}/maintenance/{maintenanceId}": {
+      "schema": "Manutencao",
+      "description": "Registros de manutenção preventiva e corretiva"
+    },
+    "companies/{empresaId}/fines/{fineId}": {
+      "schema": "Multa",
+      "description": "Registros de multas de trânsito"
+    },
+    "companies/{empresaId}/insurances/{insuranceId}": {
+      "schema": "Seguro",
+      "description": "Apólices de seguro da frota"
+    },
+    "companies/{empresaId}/documents/{documentId}": {
+      "schema": "DocumentoVeiculo",
+      "description": "Documentos e licenças veiculares"
+    },
+    "users/{userId}": {
+      "schema": "PerfilUsuario",
+      "description": "Mapeamento global do usuário autenticado para sua empresa e papel"
+    }
+  }
+}

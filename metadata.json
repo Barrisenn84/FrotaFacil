@@ -1,0 +1,9 @@
+{
+  "name": "FrotaFácil - Gestão de Frota e Leitura IA",
+  "description": "Registro instantâneo de abastecimento e manutenção de frotas com captura por câmera e extração inteligente de comprovantes por IA.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

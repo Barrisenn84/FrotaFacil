@@ -1,0 +1,653 @@
+{
+  "companies": [
+    {
+      "id": "comp-translog-01",
+      "name": "TransLog Transportes e Logística S/A",
+      "cnpj": "12.345.678/0001-90",
+      "maxTankMarginPercent": 10,
+      "status": "active",
+      "created_at": "2025-01-10T08:00:00.000Z"
+    },
+    {
+      "id": "comp-rapidobr-02",
+      "name": "Expresso Rápido Brasil Ltda",
+      "cnpj": "98.765.432/0001-11",
+      "maxTankMarginPercent": 8,
+      "status": "active",
+      "created_at": "2025-02-01T09:00:00.000Z"
+    }
+  ],
+  "users": [
+    {
+      "id": "usr-admin-translog",
+      "company_id": "comp-translog-01",
+      "name": "Renata Albuquerque (Gestora de Frota)",
+      "email": "admin@translog.com.br",
+      "role": "administrativo",
+      "active": true,
+      "created_at": "2025-01-10T08:30:00.000Z"
+    },
+    {
+      "id": "usr-driver-carlos",
+      "company_id": "comp-translog-01",
+      "name": "Carlos Eduardo Santos",
+      "email": "carlos@translog.com.br",
+      "role": "motorista",
+      "active": true,
+      "created_at": "2025-01-15T09:00:00.000Z"
+    },
+    {
+      "id": "usr-driver-marcos",
+      "company_id": "comp-translog-01",
+      "name": "Marcos Silveira Lima",
+      "email": "marcos@translog.com.br",
+      "role": "motorista",
+      "active": true,
+      "created_at": "2025-01-20T10:00:00.000Z"
+    },
+    {
+      "id": "usr-admin-rapido",
+      "company_id": "comp-rapidobr-02",
+      "name": "Danilo Pacheco (Gerente Operacional)",
+      "email": "danilo@rapidobrasil.com.br",
+      "role": "administrativo",
+      "active": true,
+      "created_at": "2025-02-01T09:30:00.000Z"
+    },
+    {
+      "id": "usr-driver-joao",
+      "company_id": "comp-rapidobr-02",
+      "name": "João Batista Ferreira",
+      "email": "joao@rapidobrasil.com.br",
+      "role": "motorista",
+      "active": true,
+      "created_at": "2025-02-05T11:00:00.000Z"
+    }
+  ],
+  "drivers": [
+    {
+      "id": "drv-carlos-01",
+      "company_id": "comp-translog-01",
+      "user_id": "usr-driver-carlos",
+      "name": "Carlos Eduardo Santos",
+      "email": "carlos@translog.com.br",
+      "phone": "(11) 98765-4321",
+      "cnh": "04918273645",
+      "cnh_category": "D",
+      "cnh_expiration": "2027-11-20",
+      "status": "ativo",
+      "created_at": "2025-01-15T09:00:00.000Z"
+    },
+    {
+      "id": "drv-marcos-02",
+      "company_id": "comp-translog-01",
+      "user_id": "usr-driver-marcos",
+      "name": "Marcos Silveira Lima",
+      "email": "marcos@translog.com.br",
+      "phone": "(11) 97654-3210",
+      "cnh": "08372615243",
+      "cnh_category": "E",
+      "cnh_expiration": "2026-08-15",
+      "status": "ativo",
+      "created_at": "2025-01-20T10:00:00.000Z"
+    },
+    {
+      "id": "drv-joao-03",
+      "company_id": "comp-rapidobr-02",
+      "user_id": "usr-driver-joao",
+      "name": "João Batista Ferreira",
+      "email": "joao@rapidobrasil.com.br",
+      "phone": "(21) 99123-4567",
+      "cnh": "01928374650",
+      "cnh_category": "E",
+      "cnh_expiration": "2026-05-10",
+      "status": "ativo",
+      "created_at": "2025-02-05T11:00:00.000Z"
+    }
+  ],
+  "vehicles": [
+    {
+      "id": "veh-fiorino-01",
+      "company_id": "comp-translog-01",
+      "plate": "FLT3B11",
+      "chassi": "9BD23849182371928",
+      "renavam": "18273645019",
+      "make": "Fiat",
+      "model": "Fiorino Endurance 1.4 EVO",
+      "year": 2023,
+      "fuel_type": "Etanol",
+      "tank_capacity_liters": 55,
+      "initial_km": 12000,
+      "current_km": 34850,
+      "status": "ativo",
+      "next_maintenance_km": 40000,
+      "next_maintenance_desc": "Troca de óleo sintético 5W30 + Filtros de ar e combustível",
+      "created_at": "2025-01-10T10:00:00.000Z"
+    },
+    {
+      "id": "veh-vw-02",
+      "company_id": "comp-translog-01",
+      "plate": "SPX9A88",
+      "chassi": "9BW83746281920394",
+      "renavam": "82736450192",
+      "make": "Volkswagen",
+      "model": "Constellation 24.280 V-Tronic",
+      "year": 2022,
+      "fuel_type": "Diesel S10",
+      "tank_capacity_liters": 275,
+      "initial_km": 45000,
+      "current_km": 67900,
+      "status": "ativo",
+      "next_maintenance_km": 70000,
+      "next_maintenance_desc": "Revisão preventiva de freios e suspensão pneumática",
+      "created_at": "2025-01-10T11:00:00.000Z"
+    },
+    {
+      "id": "veh-scania-03",
+      "company_id": "comp-translog-01",
+      "plate": "BRA2E19",
+      "chassi": "9BS72635481920394",
+      "renavam": "73645019283",
+      "make": "Scania",
+      "model": "R450 Highline 6x2",
+      "year": 2021,
+      "fuel_type": "Diesel S10",
+      "tank_capacity_liters": 400,
+      "initial_km": 110000,
+      "current_km": 142500,
+      "status": "manutencao",
+      "next_maintenance_km": 140000,
+      "next_maintenance_desc": "Regulagem de válvulas e substituição correia poly-V",
+      "created_at": "2025-01-12T14:00:00.000Z"
+    },
+    {
+      "id": "veh-volvo-04",
+      "company_id": "comp-rapidobr-02",
+      "plate": "RAP1A01",
+      "chassi": "9BV82736451029384",
+      "renavam": "62534102938",
+      "make": "Volvo",
+      "model": "FH 540 Globetrotter 6x4",
+      "year": 2023,
+      "fuel_type": "Diesel S10",
+      "tank_capacity_liters": 450,
+      "initial_km": 160000,
+      "current_km": 210000,
+      "status": "ativo",
+      "next_maintenance_km": 215000,
+      "next_maintenance_desc": "Troca de filtros de arla 32 e regulagem injetores",
+      "created_at": "2025-02-01T12:00:00.000Z"
+    },
+    {
+      "plate": "TEST999",
+      "chassi": "9BD99999999999999",
+      "renavam": "99999999999",
+      "make": "Mercedes-Benz",
+      "model": "Actros 2651",
+      "year": 2024,
+      "fuel_type": "Diesel S10",
+      "tank_capacity_liters": 600,
+      "initial_km": 1000,
+      "current_km": 2900,
+      "status": "ativo",
+      "id": "veh-muwld3jq-3dig",
+      "company_id": "comp-translog-01",
+      "created_at": "2026-10-06T11:24:40.886Z"
+    },
+    {
+      "plate": "TEST999",
+      "chassi": "9BD99999999999999",
+      "renavam": "99999999999",
+      "make": "Mercedes-Benz",
+      "model": "Actros 2651",
+      "year": 2024,
+      "fuel_type": "Diesel S10",
+      "tank_capacity_liters": 600,
+      "initial_km": 1000,
+      "current_km": 2900,
+      "status": "ativo",
+      "id": "veh-muwldqww-wxhs",
+      "company_id": "comp-translog-01",
+      "created_at": "2026-10-06T11:25:11.168Z"
+    },
+    {
+      "plate": "TEST999",
+      "chassi": "9BD99999999999999",
+      "renavam": "99999999999",
+      "make": "Mercedes-Benz",
+      "model": "Actros 2651",
+      "year": 2024,
+      "fuel_type": "Diesel S10",
+      "tank_capacity_liters": 600,
+      "initial_km": 1000,
+      "current_km": 2900,
+      "status": "ativo",
+      "id": "veh-muwlglcd-qulr",
+      "company_id": "comp-translog-01",
+      "created_at": "2026-10-06T11:27:23.917Z"
+    }
+  ],
+  "vehicle_driver_links": [
+    {
+      "id": "link-carlos-fiorino",
+      "company_id": "comp-translog-01",
+      "vehicle_id": "veh-fiorino-01",
+      "driver_id": "drv-carlos-01",
+      "started_at": "2025-01-15T00:00:00.000Z",
+      "ended_at": null,
+      "is_active": true,
+      "notes": "Entregas expressas urbanas Grande SP",
+      "created_by": "usr-admin-translog",
+      "created_at": "2025-01-15T09:15:00.000Z"
+    },
+    {
+      "id": "link-carlos-vw",
+      "company_id": "comp-translog-01",
+      "vehicle_id": "veh-vw-02",
+      "driver_id": "drv-carlos-01",
+      "started_at": "2025-02-01T00:00:00.000Z",
+      "ended_at": null,
+      "is_active": true,
+      "notes": "Rotas intermunicipais secundárias",
+      "created_by": "usr-admin-translog",
+      "created_at": "2025-02-01T10:00:00.000Z"
+    },
+    {
+      "id": "link-marcos-scania",
+      "company_id": "comp-translog-01",
+      "vehicle_id": "veh-scania-03",
+      "driver_id": "drv-marcos-02",
+      "started_at": "2025-01-20T00:00:00.000Z",
+      "ended_at": null,
+      "is_active": true,
+      "notes": "Linha interestadual SP - PR",
+      "created_by": "usr-admin-translog",
+      "created_at": "2025-01-20T10:30:00.000Z"
+    },
+    {
+      "id": "link-joao-volvo",
+      "company_id": "comp-rapidobr-02",
+      "vehicle_id": "veh-volvo-04",
+      "driver_id": "drv-joao-03",
+      "started_at": "2025-02-05T00:00:00.000Z",
+      "ended_at": null,
+      "is_active": true,
+      "notes": "Transporte de grãos safra Centro-Oeste",
+      "created_by": "usr-admin-rapido",
+      "created_at": "2025-02-05T11:15:00.000Z"
+    }
+  ],
+  "fleet_events": [
+    {
+      "id": "evt-fuel-01",
+      "company_id": "comp-translog-01",
+      "vehicle_id": "veh-fiorino-01",
+      "driver_id": "drv-carlos-01",
+      "event_type": "fuel",
+      "status": "confirmed",
+      "event_date": "2025-05-10",
+      "odometer": 34850,
+      "total_amount": 198,
+      "evidence_file_id": "ev-seed-01",
+      "notes": "Abastecimento tanque cheio Posto Graal KM 56",
+      "created_by": "usr-driver-carlos",
+      "confirmed_by": "usr-driver-carlos",
+      "confirmed_at": "2025-05-10T14:35:00.000Z",
+      "created_at": "2025-05-10T14:32:00.000Z",
+      "updated_at": "2025-05-10T14:35:00.000Z"
+    },
+    {
+      "id": "evt-maint-02",
+      "company_id": "comp-translog-01",
+      "vehicle_id": "veh-vw-02",
+      "driver_id": "drv-carlos-01",
+      "event_type": "maintenance",
+      "status": "confirmed",
+      "event_date": "2025-05-02",
+      "odometer": 67200,
+      "total_amount": 1450,
+      "evidence_file_id": "ev-seed-02",
+      "notes": "Substituição lonas de freio traseiras e sangria do sistema",
+      "created_by": "usr-admin-translog",
+      "confirmed_by": "usr-admin-translog",
+      "confirmed_at": "2025-05-02T16:15:00.000Z",
+      "created_at": "2025-05-02T16:05:00.000Z",
+      "updated_at": "2025-05-02T16:15:00.000Z"
+    }
+  ],
+  "fuel_events": [
+    {
+      "id": "fdet-01",
+      "fleet_event_id": "evt-fuel-01",
+      "company_id": "comp-translog-01",
+      "gas_station_name": "Auto Posto Graal Turmalina Ltda",
+      "cnpj": "53.123.456/0001-88",
+      "fuel_type": "Etanol",
+      "liters": 45,
+      "price_per_liter": 4.4,
+      "is_full_tank": true,
+      "calculated_km_delta": 420,
+      "calculated_km_per_liter": 9.33,
+      "calculated_cost_per_km": 0.47
+    }
+  ],
+  "maintenance_events": [
+    {
+      "id": "mdet-01",
+      "fleet_event_id": "evt-maint-02",
+      "company_id": "comp-translog-01",
+      "workshop_name": "Mecânica Diesel Pesados Bandeirantes",
+      "cnpj": "11.222.333/0001-44",
+      "maintenance_type": "corretiva",
+      "parts_cost": 950,
+      "labor_cost": 500,
+      "items_description": "Jogo de lonas de freio Fras-le + 2 cilindros de roda + mão de obra regulagem",
+      "next_suggested_km": 70000
+    }
+  ],
+  "evidence_files": [
+    {
+      "id": "ev-seed-01",
+      "company_id": "comp-translog-01",
+      "file_path": "/placeholder-receipt-01.jpg",
+      "original_name": "cupom_posto_graal_55l.jpg",
+      "mime_type": "image/jpeg",
+      "file_size": 245100,
+      "sha256_hash": "097b1d07fbf0bf11ebef728691122e8c89804b9ac198b74582d98b8db62baa1d",
+      "upload_type": "receipt",
+      "created_at": "2025-05-10T14:30:00.000Z"
+    },
+    {
+      "id": "ev-seed-02",
+      "company_id": "comp-translog-01",
+      "file_path": "/placeholder-os-02.jpg",
+      "original_name": "os_mecanica_revisao_vw.jpg",
+      "mime_type": "image/jpeg",
+      "file_size": 382400,
+      "sha256_hash": "f6e8eaee32ee5ac5db9ffaa3f5dfd4c56bf79d82a3f7095d8fa7476bba615e9e",
+      "upload_type": "receipt",
+      "created_at": "2025-05-02T16:00:00.000Z"
+    }
+  ],
+  "ai_extractions": [],
+  "automatic_validations": [
+    {
+      "id": "val-01",
+      "company_id": "comp-translog-01",
+      "fleet_event_id": "evt-fuel-01",
+      "rule_name": "ODOMETER_CHECK",
+      "passed": true,
+      "severity": "INFO",
+      "message": "Odômetro 34.850 km válido (avanço de 420 km em relação ao anterior 34.430 km).",
+      "details": {
+        "previousKm": 34430,
+        "newKm": 34850,
+        "deltaKm": 420
+      },
+      "created_at": "2025-05-10T14:33:00.000Z"
+    },
+    {
+      "id": "val-02",
+      "company_id": "comp-translog-01",
+      "fleet_event_id": "evt-fuel-01",
+      "rule_name": "TANK_CAPACITY_CHECK",
+      "passed": true,
+      "severity": "INFO",
+      "message": "Volume de 45.00 L está dentro do limite do tanque de 55.0 L (81.8% da capacidade).",
+      "details": {
+        "liters": 45,
+        "tankCapacity": 55,
+        "percent": 81.8
+      },
+      "created_at": "2025-05-10T14:33:00.000Z"
+    }
+  ],
+  "audit_logs": [
+    {
+      "id": "aud-01",
+      "company_id": "comp-translog-01",
+      "user_id": "usr-driver-carlos",
+      "user_name": "Carlos Eduardo Santos",
+      "action": "EVENT_CONFIRMED",
+      "entity": "FleetEvent",
+      "entity_id": "evt-fuel-01",
+      "details": {
+        "vehicle": "FLT3B11",
+        "type": "fuel",
+        "amount": 198,
+        "odometer": 34850
+      },
+      "ip": "189.120.44.12",
+      "created_at": "2025-05-10T14:35:00.000Z"
+    },
+    {
+      "id": "aud-muftf35e-8qip",
+      "company_id": "comp-translog-01",
+      "user_id": "usr-driver-carlos",
+      "user_name": "Carlos Eduardo Santos",
+      "action": "USER_LOGIN",
+      "entity": "User",
+      "entity_id": "usr-driver-carlos",
+      "details": {
+        "email": "carlos@translog.com.br",
+        "role": "motorista"
+      },
+      "ip": "127.0.0.1",
+      "created_at": "2026-09-24T17:38:05.618Z"
+    },
+    {
+      "id": "aud-muwlf0n5-qmbd",
+      "company_id": "comp-translog-01",
+      "user_id": "usr-admin-translog",
+      "user_name": "Renata Albuquerque (Gestora de Frota)",
+      "action": "USER_LOGIN",
+      "entity": "User",
+      "entity_id": "usr-admin-translog",
+      "details": {
+        "email": "admin@translog.com.br",
+        "role": "administrativo"
+      },
+      "ip": "::1",
+      "created_at": "2026-10-06T11:26:10.433Z"
+    }
+  ],
+  "notifications": [
+    {
+      "id": "notif-01",
+      "company_id": "comp-translog-01",
+      "title": "Revisão Preventiva Próxima",
+      "message": "O caminhão Scania R450 (BRA2E19) atingiu 142.500 km e ultrapassou a meta de preventiva (140.000 km).",
+      "type": "warning",
+      "read": false,
+      "created_at": "2025-05-11T08:00:00.000Z"
+    }
+  ],
+  "daily_insights": [
+    {
+      "id": "insight-2026-10-06-comp-translog-01",
+      "empresaId": "comp-translog-01",
+      "date": "2026-10-06",
+      "generatedAt": "2026-10-06T10:58:33.121Z",
+      "executionMode": "on_demand",
+      "contextCacheUsed": true,
+      "totalVehiclesAnalyzed": 3,
+      "totalEventsAnalyzed": 2,
+      "summaryHeadline": "Inteligência Multiagente Ativa: Frota 100% monitorada (3 revisão preditiva iminente e TCO em R$ 0.02/km).",
+      "agenteFiscal": {
+        "status": "ok",
+        "inconsistenciasDetectadas": 1,
+        "comparativosPrecoCidade": [
+          {
+            "vehiclePlate": "FLT3B11",
+            "vehicleModel": "Fiorino Endurance 1.4 EVO",
+            "city": "São Paulo",
+            "fuelType": "Diesel S10",
+            "paidPricePerLiter": 6.29,
+            "cityAvgPricePerLiter": 5.89,
+            "differencePerLiter": 0.4,
+            "totalOverpaid": 88,
+            "date": "2026-10-06",
+            "status": "acima_da_media",
+            "message": "Você pagou R$ 0,40/l acima da média de São Paulo (R$ 5,89/l ANP vs R$ 6,29/l praticado).",
+            "sourceUri": "https://www.gov.br/anp/pt-br/assuntos/precos-e-defesa-da-concorrencia/precos",
+            "sourceTitle": "Série Histórica ANP Combustíveis"
+          }
+        ],
+        "economiaPotencialMensalBrl": 1280,
+        "parecerExecutivo": "Auditoria fiscal comparou os valores com os levantamentos de preços da ANP e sinalizou oportunidades de economia em postos conveniados."
+      },
+      "agenteMecanico": {
+        "status": "alerta",
+        "veiculosEmRiscoKm": 1,
+        "projecoesPreditivas": [
+          {
+            "vehicleId": "veh-fiorino-01",
+            "vehiclePlate": "FLT3B11",
+            "vehicleModel": "Fiorino Endurance 1.4 EVO",
+            "currentKm": 34850,
+            "targetKm": 40000,
+            "kmRemaining": 5150,
+            "estimatedDaysToTarget": 52,
+            "targetDateEstimated": "2026-11-27",
+            "serviceDescription": "Troca de óleo sintético 5W30 + Filtros de ar e combustível",
+            "urgency": "baixa",
+            "suggestedActionText": "Agendar revisão preventiva para FLT3B11",
+            "scheduledPrompt": "O veículo FLT3B11 (Fiorino Endurance 1.4 EVO) atinge 40.000 km em aproximadamente 52 dias — agendo a revisão?",
+            "autoSchedulePayload": {
+              "vehicleId": "veh-fiorino-01",
+              "vehiclePlate": "FLT3B11",
+              "maintenanceType": "Troca de óleo sintético 5W30 + Filtros de ar e combustível",
+              "suggestedDate": "2026-11-27",
+              "estimatedKm": 40000
+            }
+          },
+          {
+            "vehicleId": "veh-vw-02",
+            "vehiclePlate": "SPX9A88",
+            "vehicleModel": "Constellation 24.280 V-Tronic",
+            "currentKm": 67900,
+            "targetKm": 70000,
+            "kmRemaining": 2100,
+            "estimatedDaysToTarget": 21,
+            "targetDateEstimated": "2026-10-27",
+            "serviceDescription": "Revisão preventiva de freios e suspensão pneumática",
+            "urgency": "baixa",
+            "suggestedActionText": "Agendar revisão preventiva para SPX9A88",
+            "scheduledPrompt": "O veículo SPX9A88 (Constellation 24.280 V-Tronic) atinge 70.000 km em aproximadamente 21 dias — agendo a revisão?",
+            "autoSchedulePayload": {
+              "vehicleId": "veh-vw-02",
+              "vehiclePlate": "SPX9A88",
+              "maintenanceType": "Revisão preventiva de freios e suspensão pneumática",
+              "suggestedDate": "2026-10-27",
+              "estimatedKm": 70000
+            }
+          },
+          {
+            "vehicleId": "veh-scania-03",
+            "vehiclePlate": "BRA2E19",
+            "vehicleModel": "R450 Highline 6x2",
+            "currentKm": 142500,
+            "targetKm": 140000,
+            "kmRemaining": 0,
+            "estimatedDaysToTarget": 1,
+            "targetDateEstimated": "2026-10-07",
+            "serviceDescription": "Regulagem de válvulas e substituição correia poly-V",
+            "urgency": "alta",
+            "suggestedActionText": "Agendar revisão preventiva para BRA2E19",
+            "scheduledPrompt": "O veículo BRA2E19 (R450 Highline 6x2) atinge 140.000 km em aproximadamente 1 dias — agendo a revisão?",
+            "autoSchedulePayload": {
+              "vehicleId": "veh-scania-03",
+              "vehiclePlate": "BRA2E19",
+              "maintenanceType": "Regulagem de válvulas e substituição correia poly-V",
+              "suggestedDate": "2026-10-07",
+              "estimatedKm": 140000
+            }
+          }
+        ],
+        "parecerExecutivo": "O Agente Mecânico monitorou os hodômetros e identificou 3 veículo(s) com revisão preventiva programada."
+      },
+      "agenteFinanceiro": {
+        "custoTotalFrotaBrl": 1648,
+        "custoMedioPorKm": 0.02,
+        "tendenciaMensalPercent": -2.4,
+        "maiorOfensorCustoPlaca": "FLT3B11",
+        "parecerExecutivo": "Consolidação financeira concluída com R$ 0.02/km de custo médio ponderado.",
+        "veiculosConsolidacao": [
+          {
+            "vehicleId": "veh-fiorino-01",
+            "vehiclePlate": "FLT3B11",
+            "vehicleModel": "Fiorino Endurance 1.4 EVO",
+            "totalCostBrl": 198,
+            "fuelCostBrl": 198,
+            "maintenanceCostBrl": 40,
+            "finesCostBrl": 0,
+            "totalKmDriven": 22850,
+            "costPerKm": 0.01,
+            "monthlyTrendPercent": -2.4,
+            "tcoScore": "otimo",
+            "tcoInsight": "Excelente eficiência operacional."
+          },
+          {
+            "vehicleId": "veh-vw-02",
+            "vehiclePlate": "SPX9A88",
+            "vehicleModel": "Constellation 24.280 V-Tronic",
+            "totalCostBrl": 1450,
+            "fuelCostBrl": 1160,
+            "maintenanceCostBrl": 1450,
+            "finesCostBrl": 0,
+            "totalKmDriven": 22900,
+            "costPerKm": 0.06,
+            "monthlyTrendPercent": -2.4,
+            "tcoScore": "otimo",
+            "tcoInsight": "Excelente eficiência operacional."
+          },
+          {
+            "vehicleId": "veh-scania-03",
+            "vehiclePlate": "BRA2E19",
+            "vehicleModel": "R450 Highline 6x2",
+            "totalCostBrl": 2150,
+            "fuelCostBrl": 1720,
+            "maintenanceCostBrl": 430,
+            "finesCostBrl": 0,
+            "totalKmDriven": 32500,
+            "costPerKm": 0.07,
+            "monthlyTrendPercent": -2.4,
+            "tcoScore": "otimo",
+            "tcoInsight": "Excelente eficiência operacional."
+          }
+        ]
+      },
+      "agenteCompliance": {
+        "status": "alerta",
+        "multasPendentesValorTotal": 0,
+        "alertasDocumentos": [
+          {
+            "id": "doc-taco-01",
+            "vehiclePlate": "FLT3B11",
+            "driverName": "Carlos Eduardo Santos",
+            "type": "tacografo",
+            "title": "Aferição do Tacógrafo (Inmetro)",
+            "dueDate": "2026-10-15",
+            "daysRemaining": 14,
+            "isExpired": false,
+            "fineAmount": 0,
+            "recommendation": "Agendar aferição obrigatória no posto credenciado Inmetro."
+          },
+          {
+            "id": "doc-ipva-02",
+            "vehiclePlate": "SPX9A88",
+            "driverName": "Marcos Silveira Lima",
+            "type": "ipva",
+            "title": "Licenciamento / IPVA Anual",
+            "dueDate": "2026-10-25",
+            "daysRemaining": 24,
+            "isExpired": false,
+            "fineAmount": 0,
+            "recommendation": "Emitir guia DAE para pagamento no Detran."
+          }
+        ],
+        "parecerExecutivo": "Conformidade ativa: 2 documentos regulatórios com vencimento programado para as próximas semanas."
+      }
+    }
+  ]
+}

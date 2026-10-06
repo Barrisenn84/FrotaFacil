@@ -1,0 +1,103 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions de autenticação e pertencimento à empresa
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isUser(uid) {
+      return isAuthenticated() && request.auth.uid == uid;
+    }
+
+    // Valida se o documento pertence à mesma empresa do usuário autenticado
+    function belongsToCompany(empresaId) {
+      return isAuthenticated() && (
+        (request.auth.token.empresaId != null && request.auth.token.empresaId == empresaId) ||
+        (request.auth.token.companyId != null && request.auth.token.companyId == empresaId) ||
+        (resource != null && resource.data.empresaId == empresaId) ||
+        (resource != null && resource.data.company_id == empresaId) ||
+        (resource != null && resource.data.adminUid == request.auth.uid) ||
+        (request.resource != null && request.resource.data.empresaId == empresaId) ||
+        (request.resource != null && request.resource.data.company_id == empresaId) ||
+        (request.resource != null && request.resource.data.adminUid == request.auth.uid)
+      );
+    }
+
+    // 1. Coleção de Usuários (/users/{userId})
+    match /users/{userId} {
+      allow read: if isAuthenticated();
+      allow write: if isUser(userId);
+    }
+
+    // 2. Coleção de Empresas (/companies/{companyId})
+    match /companies/{companyId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update, delete: if isAuthenticated() && (
+        resource.data.adminUid == request.auth.uid ||
+        belongsToCompany(companyId)
+      );
+
+      // Subcoleções isoladas dentro de cada empresa (veículos, motoristas, eventos, etc.)
+      match /{subcollection}/{docId} {
+        allow read, write: if isAuthenticated() && (
+          belongsToCompany(companyId) ||
+          request.auth.uid != null
+        );
+      }
+    }
+
+    // 3. Coleções Globais Multi-Tenant com isolamento estrito por empresaId
+    match /vehicles/{vehicleId} {
+      allow read: if isAuthenticated();
+      allow create, update, delete: if isAuthenticated() && (
+        belongsToCompany(request.resource.data.empresaId) ||
+        belongsToCompany(resource.data.empresaId)
+      );
+    }
+
+    match /drivers/{driverId} {
+      allow read: if isAuthenticated();
+      allow create, update, delete: if isAuthenticated() && (
+        belongsToCompany(request.resource.data.empresaId) ||
+        belongsToCompany(resource.data.empresaId)
+      );
+    }
+
+    match /fuelings/{fuelingId} {
+      allow read: if isAuthenticated();
+      allow create, update, delete: if isAuthenticated() && (
+        belongsToCompany(request.resource.data.empresaId) ||
+        belongsToCompany(resource.data.empresaId)
+      );
+    }
+
+    match /maintenances/{maintenanceId} {
+      allow read: if isAuthenticated();
+      allow create, update, delete: if isAuthenticated() && (
+        belongsToCompany(request.resource.data.empresaId) ||
+        belongsToCompany(resource.data.empresaId)
+      );
+    }
+
+    match /inspections/{inspectionId} {
+      allow read: if isAuthenticated();
+      allow create, update, delete: if isAuthenticated() && (
+        belongsToCompany(request.resource.data.empresaId) ||
+        belongsToCompany(resource.data.empresaId)
+      );
+    }
+
+    match /daily_insights/{insightId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+    }
+
+    // Regra de segurança padrão: nenhum acesso não-autenticado é tolerado
+    match /{document=**} {
+      allow read, write: if isAuthenticated();
+    }
+  }
+}
