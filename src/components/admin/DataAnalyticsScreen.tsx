@@ -478,7 +478,7 @@ export const DataAnalyticsScreen: React.FC = () => {
               </span>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                {aiInsights.acoesRecomendadas.map((acao, i) => (
+                {aiInsights.acoesRecomendadas.map((acao: any, i: number) => (
                   <div
                     key={i}
                     className="p-3.5 rounded-2xl bg-slate-950 border border-slate-800 flex flex-col justify-between"
