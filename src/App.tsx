@@ -23,10 +23,10 @@ function MainApp() {
         <div className="w-16 h-16 rounded-3xl bg-gradient-to-tr from-amber-500 to-orange-500 flex items-center justify-center shadow-2xl shadow-amber-500/30 animate-pulse mb-5">
           <Truck className="w-9 h-9 text-slate-950 font-bold" />
         </div>
-        <div className="text-xl font-black text-white tracking-tight">FrotaFácil AI Enterprise v2.0</div>
+        <div className="text-xl font-black text-white tracking-tight">FrotaFácil • Gestão Inteligente</div>
         <div className="text-xs text-amber-400 font-semibold mt-1.5 flex items-center gap-2">
           <div className="w-2 h-2 rounded-full bg-amber-400 animate-ping" />
-          <span>Iniciando ambiente corporativo e inteligência artificial...</span>
+          <span>Carregando o sistema e conectando sua frota...</span>
         </div>
       </div>
     );

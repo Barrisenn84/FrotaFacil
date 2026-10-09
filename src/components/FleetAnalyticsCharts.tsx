@@ -329,15 +329,15 @@ export const FleetAnalyticsCharts: React.FC<FleetAnalyticsChartsProps> = ({
           <div className="flex items-center gap-2">
             <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-amber-400 bg-amber-400/10 border border-amber-400/20 px-2.5 py-1 rounded-full">
               <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-              Inteligência Financeira de Frota
+              Controle Financeiro da Frota
             </span>
-            <span className="text-xs text-slate-500">• Recharts Engine</span>
+            <span className="text-xs text-slate-500">• Gráficos Interativos</span>
           </div>
           <h2 className="text-lg sm:text-xl font-black text-white tracking-tight mt-1 flex items-center gap-2">
-            Evolução de Gastos & Economia Gerada por Combustível
+            Evolução de Gastos e Economia de Combustível
           </h2>
           <p className="text-xs text-slate-400">
-            Acompanhamento mensal de custos auditados por IA e cálculo de economia por prevenção de inconsistências
+            Acompanhe quanto sua empresa gastou em cada mês e quanto economizou evitando irregularidades
           </p>
         </div>
 

@@ -456,6 +456,44 @@ Fluxo Obrigatório Mãos Livres:
     }
   };
 
+  // 3. Encerramento seguro e explícito da sessão e periféricos
+  const handleClose = () => {
+    try {
+      if (videoIntervalRef.current) {
+        clearInterval(videoIntervalRef.current);
+        videoIntervalRef.current = null;
+      }
+      if (videoRef.current && videoRef.current.srcObject) {
+        const stream = videoRef.current.srcObject as MediaStream;
+        stream.getTracks().forEach((t) => t.stop());
+        videoRef.current.srcObject = null;
+      }
+      if (mediaStreamRef.current) {
+        mediaStreamRef.current.getTracks().forEach((t) => t.stop());
+        mediaStreamRef.current = null;
+      }
+      if (liveSessionRef.current) {
+        try {
+          liveSessionRef.current.close();
+        } catch (e) {}
+      }
+      if (audioProcessorRef.current) {
+        audioProcessorRef.current.disconnect();
+      }
+      if (inputAudioCtxRef.current && inputAudioCtxRef.current.state !== 'closed') {
+        inputAudioCtxRef.current.close();
+      }
+      if (outputAudioCtxRef.current && outputAudioCtxRef.current.state !== 'closed') {
+        outputAudioCtxRef.current.close();
+      }
+    } catch (e) {}
+    onClose();
+  };
+
+  const formattedModel = (vehicle.model || '')
+    .replace(/\s*\/\s*/g, ' / ')
+    .replace(/(\d+)x(\d+)/g, ' $1x$2');
+
   return (
     <div className="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-xl flex flex-col items-center justify-between p-4 sm:p-6 text-slate-100 font-['Plus_Jakarta_Sans',sans-serif]">
       {/* Top Header */}
@@ -466,17 +504,17 @@ Fluxo Obrigatório Mãos Livres:
           </div>
           <div>
             <div className="text-xs font-black uppercase tracking-wider text-amber-400">
-              Gemini 3.8 Live • Hands-Free
+              Copiloto por Voz • Mãos Livres
             </div>
             <div className="text-sm font-extrabold text-white">
-              {vehicle.plate} • {vehicle.model}
+              {vehicle.plate} • {formattedModel || 'Veículo da Frota'}
             </div>
           </div>
         </div>
 
         <button
           type="button"
-          onClick={onClose}
+          onClick={handleClose}
           className="p-2.5 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition cursor-pointer"
         >
           <X className="w-5 h-5" />
@@ -497,7 +535,7 @@ Fluxo Obrigatório Mãos Livres:
             <canvas ref={videoCanvasRef} className="hidden" />
             <div className="absolute top-3 left-3 bg-black/70 backdrop-blur-md px-2.5 py-1 rounded-full text-[10px] font-bold text-amber-300 flex items-center gap-1.5 border border-amber-500/30">
               <Camera className="w-3 h-3 text-amber-400" />
-              <span>Vídeo ao Vivo (1 FPS para IA)</span>
+              <span>Câmera ao Vivo para Leitura</span>
             </div>
           </div>
         )}
@@ -536,17 +574,17 @@ Fluxo Obrigatório Mãos Livres:
         <div className="space-y-1.5 max-w-sm">
           <div className="text-base font-extrabold text-white">
             {sessionState === 'connecting'
-              ? 'Conectando ao Gemini Live...'
+              ? 'Conectando com o assistente de voz...'
               : sessionState === 'listening'
               ? 'Ouvindo você em tempo real...'
               : sessionState === 'speaking'
               ? 'Copiloto falando...'
               : sessionState === 'processing'
-              ? 'Salvando registro no banco de dados...'
+              ? 'Salvando comprovante no sistema...'
               : 'Sessão encerrada'}
           </div>
           <p className="text-xs text-slate-400">
-            Fale naturalmente: <em>"Abasteci 45 litros, R$ 260 no Posto Graal"</em>. A IA pedirá o odômetro e confirmará antes de salvar.
+            Fale naturalmente com suas palavras: <em>"Abasteci 45 litros, R$ 260 no posto"</em>. O assistente perguntará a quilometragem e confirmará com você antes de salvar.
           </p>
         </div>
 
@@ -584,12 +622,12 @@ Fluxo Obrigatório Mãos Livres:
           }`}
         >
           {isCameraActive ? <Video className="w-4 h-4" /> : <VideoOff className="w-4 h-4" />}
-          <span>{isCameraActive ? 'Câmera Ativa (Apontar para Cupom)' : 'Ativar Câmera ao Vivo'}</span>
+          <span>{isCameraActive ? 'Câmera Ativada (Aponte para o comprovante)' : 'Ativar Câmera ao Vivo'}</span>
         </button>
 
         <button
           type="button"
-          onClick={onClose}
+          onClick={handleClose}
           className="px-6 py-3 rounded-2xl bg-slate-800 hover:bg-rose-500/20 hover:text-rose-300 text-slate-300 font-extrabold text-xs transition cursor-pointer"
         >
           Encerrar Conversa

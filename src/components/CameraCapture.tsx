@@ -514,37 +514,51 @@ export const CameraCapture: React.FC<CameraCaptureProps> = ({
     playShutterClick();
     setTimeout(() => setIsFlashActive(false), 180);
 
-    const width = video.videoWidth || 1280;
-    const height = video.videoHeight || 720;
+    let rawWidth = video.videoWidth || 1280;
+    let rawHeight = video.videoHeight || 720;
 
-    canvas.width = width;
-    canvas.height = height;
+    // Escala proporcional inteligente: limita lado maior a 1600px para transmissão 10x mais rápida
+    const MAX_DIM = 1600;
+    let targetWidth = rawWidth;
+    let targetHeight = rawHeight;
+    if (targetWidth > MAX_DIM || targetHeight > MAX_DIM) {
+      if (targetWidth > targetHeight) {
+        targetHeight = Math.round((targetHeight * MAX_DIM) / targetWidth);
+        targetWidth = MAX_DIM;
+      } else {
+        targetWidth = Math.round((targetWidth * MAX_DIM) / targetHeight);
+        targetHeight = MAX_DIM;
+      }
+    }
+
+    canvas.width = targetWidth;
+    canvas.height = targetHeight;
 
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
     // Handle horizontal mirroring if user enabled it
     if (isMirrored) {
-      ctx.translate(width, 0);
+      ctx.translate(targetWidth, 0);
       ctx.scale(-1, 1);
     }
 
-    // Draw video frame to canvas
-    ctx.drawImage(video, 0, 0, width, height);
+    // Draw video frame to canvas com alta fidelidade
+    ctx.drawImage(video, 0, 0, targetWidth, targetHeight);
 
-    // Convert canvas to Blob and create Object URL as requested
+    // Convert canvas to Blob and create Object URL
     canvas.toBlob(
       (blob) => {
         if (!blob) return;
         const objectUrl = URL.createObjectURL(blob);
-        const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.88);
 
         // Stop stream before delivering callback
         stopStream();
         onCapture(objectUrl, blob, dataUrl);
       },
       'image/jpeg',
-      0.92
+      0.88
     );
   };
 
@@ -615,7 +629,7 @@ export const CameraCapture: React.FC<CameraCaptureProps> = ({
                 {title}
               </h2>
               <span className="text-[10px] text-slate-400 block leading-tight">
-                MediaDevices • Captura por Canvas
+                Câmera do Dispositivo
               </span>
             </div>
           </div>
@@ -792,18 +806,18 @@ export const CameraCapture: React.FC<CameraCaptureProps> = ({
                     <span className="bg-black/80 backdrop-blur-md px-3.5 py-1.5 rounded-full text-[11px] font-semibold text-amber-300 border border-amber-500/30 flex items-center gap-1.5 shadow-lg">
                       <Sparkles className="w-3.5 h-3.5 text-amber-400 animate-pulse" />
                       {facingMode === 'environment'
-                        ? '📷 Traseira: Enquadre o documento fiscal'
-                        : '🤳 Frontal: Aponte o documento para a webcam'}
+                        ? '📷 Câmera Traseira: Enquadre o comprovante ou painel'
+                        : '🤳 Câmera Frontal: Aponte o comprovante para a câmera'}
                     </span>
                   </div>
 
                   <div className="text-center">
                     <span className="text-[10px] text-slate-300 bg-black/70 backdrop-blur-sm px-2.5 py-1 rounded-full border border-slate-700/60 font-medium">
                       {facingMode === 'environment'
-                        ? 'Mantenha focado e iluminado'
+                        ? 'Mantenha focado e bem iluminado'
                         : isMirrored
                         ? 'Modo Espelhado • Clique no botão 🪞 para inverter'
-                        : 'Texto legível • Aproxime o cupom'}
+                        : 'Deixe as informações bem legíveis'}
                     </span>
                   </div>
                 </div>
@@ -818,7 +832,7 @@ export const CameraCapture: React.FC<CameraCaptureProps> = ({
                     className="bg-transparent text-slate-200 text-[10px] font-medium focus:outline-none pr-2 cursor-pointer"
                   >
                     <option value="" className="bg-slate-900 text-white">
-                      Dispositivo: Automático
+                      Câmera: Automática
                     </option>
                     {availableCameras.map((cam, idx) => (
                       <option
@@ -881,7 +895,7 @@ export const CameraCapture: React.FC<CameraCaptureProps> = ({
                   <div className="flex items-center justify-between mb-1.5">
                     <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider flex items-center gap-1">
                       <Sparkles className="w-3 h-3 text-amber-400" />
-                      Ou teste em 1 toque com comprovante pronto:
+                      Ou teste em 1 toque com modelo de exemplo:
                     </span>
                   </div>
                   <div className="grid grid-cols-2 gap-2">

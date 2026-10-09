@@ -1,16 +1,6 @@
 import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
-import { initializeApp, getApps, getApp } from 'firebase/app';
-import {
-  getFirestore,
-  doc,
-  setDoc,
-  getDoc,
-  collection,
-  getDocs,
-  Firestore,
-} from 'firebase/firestore';
 import {
   Company,
   User,
@@ -54,22 +44,6 @@ if (!fs.existsSync(UPLOADS_DIR)) {
   fs.mkdirSync(UPLOADS_DIR, { recursive: true });
 }
 
-// Inicialização resiliente da conexão com Firestore no backend
-let firestoreBackendDb: Firestore | null = null;
-try {
-  const configPath = path.join(process.cwd(), 'firebase-applet-config.json');
-  if (fs.existsSync(configPath)) {
-    const firebaseConfig = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
-    const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
-    firestoreBackendDb = firebaseConfig.firestoreDatabaseId
-      ? getFirestore(app, firebaseConfig.firestoreDatabaseId)
-      : getFirestore(app);
-    console.log('🔥 [Firestore Backend] Instância Firestore conectada para persistência multi-tenant permanente.');
-  }
-} catch (e: any) {
-  console.warn('⚠️ [Firestore Backend] Aviso na inicialização do Firestore:', e?.message || e);
-}
-
 class FleetDatabase {
   private data: DatabaseSchema;
 
@@ -78,136 +52,6 @@ class FleetDatabase {
     if (this.data.companies.length === 0) {
       this.seedInitialData();
       this.saveDatabase();
-    }
-    // Hidratação assíncrona do Firestore se ativo
-    this.hydrateFromFirestore().catch((err) => {
-      console.warn('[Firestore] Aviso na hidratação em background:', err?.message || err);
-    });
-  }
-
-  /**
-   * Sanitiza recursivamente objetos removendo propriedades undefined
-   */
-  private sanitizeForFirestore(obj: any): any {
-    if (obj === null || obj === undefined) return null;
-    if (Array.isArray(obj)) {
-      return obj
-        .filter((item) => item !== undefined)
-        .map((item) => (typeof item === 'object' && item !== null ? this.sanitizeForFirestore(item) : item));
-    }
-    if (typeof obj === 'object') {
-      const cleaned: Record<string, any> = {};
-      for (const [k, v] of Object.entries(obj)) {
-        if (v !== undefined) {
-          cleaned[k] = typeof v === 'object' && v !== null ? this.sanitizeForFirestore(v) : v;
-        }
-      }
-      return cleaned;
-    }
-    return obj;
-  }
-
-  /**
-   * Sincroniza documento diretamente com o Firestore em nuvem
-   */
-  private async syncDocToFirestore(pathSegments: string[], payload: any): Promise<void> {
-    if (!firestoreBackendDb || pathSegments.length < 2) return;
-    try {
-      const sanitized = this.sanitizeForFirestore(payload);
-      const [col, docId, ...subPath] = pathSegments;
-      const docRef = doc(firestoreBackendDb, col, docId, ...subPath);
-      await setDoc(docRef, sanitized, { merge: true });
-    } catch (err: any) {
-      console.warn(`[Firestore Sync] Aviso ao sincronizar ${pathSegments.join('/')}:`, err?.message || err);
-    }
-  }
-
-  /**
-   * Hidrata dados em memória a partir do Firestore ao iniciar em disco efêmero
-   */
-  public async hydrateFromFirestore(): Promise<void> {
-    if (!firestoreBackendDb) return;
-    try {
-      // 1. Hidratar empresas
-      const compSnap = await getDocs(collection(firestoreBackendDb, 'companies'));
-      if (!compSnap.empty) {
-        for (const docSnap of compSnap.docs) {
-          const compData = docSnap.data() as any;
-          const compId = docSnap.id;
-          const exists = this.data.companies.some((c) => c.id === compId);
-          if (!exists) {
-            this.data.companies.push({
-              id: compId,
-              name: compData.name || compData.nome || 'Empresa FrotaFácil',
-              cnpj: compData.cnpj || '00.000.000/0001-00',
-              maxTankMarginPercent: compData.maxTankMarginPercent || 10,
-              status: compData.status || 'active',
-              created_at: compData.dataCriacao || compData.created_at || new Date().toISOString(),
-            });
-          }
-
-          // 2. Hidratar veículos da empresa
-          const vehCol = collection(firestoreBackendDb, 'companies', compId, 'vehicles');
-          const vehSnap = await getDocs(vehCol);
-          for (const vDoc of vehSnap.docs) {
-            const vData = vDoc.data() as any;
-            const existingIdx = this.data.vehicles.findIndex((v) => v.id === vDoc.id);
-            const vehObj: Vehicle = {
-              id: vDoc.id,
-              company_id: compId,
-              plate: vData.plate || vData.placa || '',
-              chassi: vData.chassi || '',
-              renavam: vData.renavam || '',
-              make: vData.make || vData.marca || '',
-              model: vData.model || vData.modelo || '',
-              year: vData.year || vData.ano || 2023,
-              fuel_type: vData.fuel_type || vData.combustivel || 'Diesel S10',
-              tank_capacity_liters: vData.tank_capacity_liters || vData.capacidadeTanque || 500,
-              initial_km: vData.initial_km ?? vData.kmInicial ?? 0,
-              current_km: vData.current_km ?? vData.kmAtual ?? 0,
-              status: vData.status || 'ativo',
-              next_maintenance_km: vData.next_maintenance_km,
-              next_maintenance_desc: vData.next_maintenance_desc,
-              created_at: vData.created_at || new Date().toISOString(),
-            };
-            if (existingIdx >= 0) {
-              this.data.vehicles[existingIdx] = vehObj;
-            } else {
-              this.data.vehicles.push(vehObj);
-            }
-          }
-
-          // 3. Hidratar motoristas da empresa
-          const drvCol = collection(firestoreBackendDb, 'companies', compId, 'drivers');
-          const drvSnap = await getDocs(drvCol);
-          for (const dDoc of drvSnap.docs) {
-            const dData = dDoc.data() as any;
-            const existingIdx = this.data.drivers.findIndex((d) => d.id === dDoc.id);
-            const drvObj: Driver = {
-              id: dDoc.id,
-              company_id: compId,
-              user_id: dData.user_id || `usr-${dDoc.id}`,
-              name: dData.name || dData.nome || 'Motorista',
-              email: dData.email || '',
-              phone: dData.phone || dData.telefone || '',
-              cnh: dData.cnh || '',
-              cnh_category: dData.cnh_category || dData.categoriaCnh || 'D',
-              cnh_expiration: dData.cnh_expiration || dData.validadeCnh || '',
-              status: dData.status || 'ativo',
-              created_at: dData.created_at || new Date().toISOString(),
-            };
-            if (existingIdx >= 0) {
-              this.data.drivers[existingIdx] = drvObj;
-            } else {
-              this.data.drivers.push(drvObj);
-            }
-          }
-        }
-        this.saveDatabase();
-        console.log(`✅ [Firestore Backend] Hidratação concluída: ${this.data.companies.length} empresas, ${this.data.vehicles.length} veículos, ${this.data.drivers.length} motoristas sincronizados.`);
-      }
-    } catch (e: any) {
-      console.warn('⚠️ [Firestore Backend] Hidratação não disponível offline:', e?.message || e);
     }
   }
 
@@ -714,7 +558,6 @@ class FleetDatabase {
     };
     this.data.drivers.push(newDriver);
     this.saveDatabase();
-    this.syncDocToFirestore(['companies', companyId, 'drivers', id], newDriver);
     return newDriver;
   }
 
@@ -723,7 +566,6 @@ class FleetDatabase {
     if (idx === -1) return null;
     this.data.drivers[idx] = { ...this.data.drivers[idx], ...updates };
     this.saveDatabase();
-    this.syncDocToFirestore(['companies', companyId, 'drivers', driverId], this.data.drivers[idx]);
     return this.data.drivers[idx];
   }
 
@@ -764,7 +606,6 @@ class FleetDatabase {
     };
     this.data.vehicles.push(newVehicle);
     this.saveDatabase();
-    this.syncDocToFirestore(['companies', companyId, 'vehicles', id], newVehicle);
     return newVehicle;
   }
 
@@ -773,7 +614,6 @@ class FleetDatabase {
     if (idx === -1) return null;
     this.data.vehicles[idx] = { ...this.data.vehicles[idx], ...updates };
     this.saveDatabase();
-    this.syncDocToFirestore(['companies', companyId, 'vehicles', vehicleId], this.data.vehicles[idx]);
     return this.data.vehicles[idx];
   }
 
@@ -832,8 +672,29 @@ class FleetDatabase {
   // Evidence Files
   public saveEvidenceFile(fileData: Omit<EvidenceFile, 'id' | 'created_at'>): EvidenceFile {
     const id = `ev-${Date.now().toString(36)}-${Math.random().toString(36).substring(2, 6)}`;
+    let finalPath = fileData.file_path;
+
+    // Se a evidência contiver base64, salva o binário no disco para não inflar o JSON
+    if (fileData.file_path && fileData.file_path.startsWith('data:image')) {
+      try {
+        const matches = fileData.file_path.match(/^data:image\/([a-zA-Z0-9+.-]+);base64,(.+)$/);
+        if (matches) {
+          const rawExt = matches[1].toLowerCase();
+          const ext = rawExt === 'jpeg' ? 'jpg' : rawExt.includes('png') ? 'png' : rawExt.includes('webp') ? 'webp' : 'jpg';
+          const buffer = Buffer.from(matches[2], 'base64');
+          const fileName = `${id}.${ext}`;
+          const diskPath = path.join(UPLOADS_DIR, fileName);
+          fs.writeFileSync(diskPath, buffer);
+          finalPath = `/uploads/${fileName}`;
+        }
+      } catch (saveErr) {
+        console.warn('Aviso: Falha ao gravar arquivo binário de evidência no disco, mantendo referência em memória:', saveErr);
+      }
+    }
+
     const newFile: EvidenceFile = {
       ...fileData,
+      file_path: finalPath,
       id,
       created_at: new Date().toISOString(),
     };
@@ -940,13 +801,6 @@ class FleetDatabase {
     }
 
     this.saveDatabase();
-    this.syncDocToFirestore(['companies', companyId, 'events', eventId], newEvent);
-    if (fuelData && eventData.event_type === 'fuel') {
-      this.syncDocToFirestore(['companies', companyId, 'fuelings', eventId], { ...newEvent, ...fuelData });
-    }
-    if (maintData && eventData.event_type === 'maintenance') {
-      this.syncDocToFirestore(['companies', companyId, 'maintenance', eventId], { ...newEvent, ...maintData });
-    }
     return newEvent;
   }
 
@@ -981,7 +835,6 @@ class FleetDatabase {
     }
 
     this.saveDatabase();
-    this.syncDocToFirestore(['companies', companyId, 'events', eventId], this.data.fleet_events[idx]);
     return this.data.fleet_events[idx];
   }
 
@@ -1185,8 +1038,6 @@ class FleetDatabase {
       list.unshift(insights);
     }
     this.saveDatabase();
-    const docKey = insights.id || insights.date || `insight-${Date.now()}`;
-    this.syncDocToFirestore(['companies', companyId, 'dailyInsights', docKey], insights);
   }
 
   public getLatestDailyInsights(companyId: string): any | null {

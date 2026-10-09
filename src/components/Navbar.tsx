@@ -82,7 +82,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               <div className="font-extrabold text-base tracking-tight flex items-center gap-1.5">
                 <span>FrotaFácil</span>
                 <span className="text-[10px] font-bold uppercase tracking-wider bg-amber-500/20 text-amber-400 px-1.5 py-0.5 rounded border border-amber-500/30">
-                  AI v2.0
+                  IA v2.0
                 </span>
               </div>
               {/* Active Company Pill */}
@@ -134,7 +134,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                         className="w-full py-2 px-3 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 text-xs font-bold flex items-center gap-2 transition cursor-pointer"
                       >
                         <PlusCircle className="w-3.5 h-3.5 text-amber-400" />
-                        <span>Onboarding / Novo Espelho Sheets</span>
+                        <span>Cadastrar Empresa & Planilha</span>
                       </button>
                     </div>
                   </div>
@@ -157,7 +157,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   }`}
                 >
                   <LayoutDashboard className="w-3.5 h-3.5" />
-                  <span>Dashboard</span>
+                  <span>Painel Geral</span>
                 </button>
 
                 <button
@@ -209,7 +209,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   }`}
                 >
                   <FileText className="w-3.5 h-3.5" />
-                  <span>Auditoria</span>
+                  <span>Auditoria & Notas</span>
                 </button>
               </>
             ) : (
@@ -224,7 +224,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   }`}
                 >
                   <Truck className="w-3.5 h-3.5" />
-                  <span>Registrar Evento</span>
+                  <span>Lançar Comprovante</span>
                 </button>
 
                 <button
@@ -251,11 +251,11 @@ export const Navbar: React.FC<NavbarProps> = ({
             <button
               type="button"
               onClick={handleSyncAllDrafts}
-              title="Clique para sincronizar rascunhos offline salvos"
+              title="Clique para sincronizar comprovantes gravados sem internet"
               className="flex items-center gap-1.5 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 px-2.5 py-1 rounded-full text-xs font-semibold transition"
             >
               <WifiOff className="w-3.5 h-3.5 text-amber-400" />
-              <span>{offlineDrafts.length} rascunho(s)</span>
+              <span>{offlineDrafts.length} comprovante(s) sem internet</span>
               <RefreshCw className={`w-3 h-3 ${syncingDraftId ? 'animate-spin' : ''}`} />
             </button>
           )}
@@ -264,7 +264,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           <button
             type="button"
             onClick={onToggleMobileFramed}
-            title={isMobileFramed ? 'Modo Tela Cheia (Desktop)' : 'Modo Celular (Mobile App)'}
+            title={isMobileFramed ? 'Ver em Tela Inteira de Computador' : 'Ver como Celular do Motorista'}
             className={`p-2 rounded-xl border text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer ${
               isMobileFramed
                 ? 'bg-amber-500/20 border-amber-500/40 text-amber-300'
@@ -272,7 +272,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             }`}
           >
             {isMobileFramed ? <Monitor className="w-4 h-4" /> : <Smartphone className="w-4 h-4" />}
-            <span className="hidden sm:inline">{isMobileFramed ? 'Desktop' : 'Simulador Mobile'}</span>
+            <span className="hidden sm:inline">{isMobileFramed ? 'Computador' : 'Modo Celular'}</span>
           </button>
 
           {/* Notifications Bell */}
@@ -354,11 +354,11 @@ export const Navbar: React.FC<NavbarProps> = ({
                 onSelectTab('dashboard');
               }
             }}
-            title={isAdmin ? 'Mudar para Visão do Motorista' : 'Mudar para Painel Administrativo'}
+            title={isAdmin ? 'Mudar para Visão do Motorista' : 'Mudar para Painel do Gestor'}
             className="px-2.5 py-1.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/40 text-amber-300 text-xs font-bold flex items-center gap-1.5 transition cursor-pointer"
           >
             {isAdmin ? <Truck className="w-3.5 h-3.5 text-amber-400" /> : <LayoutDashboard className="w-3.5 h-3.5 text-amber-400" />}
-            <span className="hidden sm:inline">{isAdmin ? 'Visão Motorista' : 'Painel Gestor'}</span>
+            <span className="hidden sm:inline">{isAdmin ? 'Ver como Motorista' : 'Painel do Gestor'}</span>
           </button>
 
           {/* User Profile & Role */}
@@ -368,19 +368,19 @@ export const Navbar: React.FC<NavbarProps> = ({
                 {currentUser?.name || 'Usuário'}
               </div>
               <div className="text-[10px] text-amber-400 capitalize font-medium">
-                {currentUser?.role === 'administrativo' ? 'Administrador' : 'Motorista'}
+                {currentUser?.role === 'administrativo' ? 'Administrador da Frota' : 'Motorista'}
               </div>
             </div>
 
-            {/* Botão Zerar Tudo */}
+            {/* Botão Limpar Tudo */}
             <button
               type="button"
               onClick={() => setShowResetModal(true)}
-              title="Zerar Tudo e Limpar Todos os Campos do Sistema"
+              title="Limpar todos os dados e campos do sistema"
               className="p-2 rounded-xl bg-slate-800/80 hover:bg-rose-500/20 hover:text-rose-300 border border-slate-700 hover:border-rose-500/40 text-slate-400 transition cursor-pointer flex items-center gap-1.5"
             >
               <Trash2 className="w-4 h-4 text-rose-400" />
-              <span className="hidden xl:inline text-xs font-bold text-rose-300">Zerar Tudo</span>
+              <span className="hidden xl:inline text-xs font-bold text-rose-300">Limpar Tudo</span>
             </button>
 
             <button
@@ -404,7 +404,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               onClick={() => onSelectTab('dashboard')}
               className={`px-2 py-1 text-xs font-semibold ${currentTab === 'dashboard' ? 'text-amber-400' : 'text-slate-400'}`}
             >
-              Dashboard
+              Painel Geral
             </button>
             <button
               type="button"
@@ -432,7 +432,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               onClick={() => onSelectTab('audit')}
               className={`px-2 py-1 text-xs font-semibold ${currentTab === 'audit' ? 'text-amber-400' : 'text-slate-400'}`}
             >
-              Auditoria
+              Auditoria & Notas
             </button>
           </>
         ) : (
@@ -442,7 +442,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               onClick={() => onSelectTab('driver-home')}
               className={`px-4 py-1 text-xs font-semibold ${currentTab === 'driver-home' ? 'text-amber-400' : 'text-slate-400'}`}
             >
-              Registrar Evento
+              Lançar Comprovante
             </button>
             <button
               type="button"

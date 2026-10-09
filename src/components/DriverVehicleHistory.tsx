@@ -32,12 +32,29 @@ export const DriverVehicleHistory: React.FC<DriverVehicleHistoryProps> = ({ vehi
 
   const activeVehicle = vehicles.find((v) => v.id === selectedVehicleId) || vehicles[0];
 
+  const isVehicleMatch = (vId?: string, plate?: string) => {
+    if (!activeVehicle) return true;
+    const cleanActivePlate = (activeVehicle.plate || '').replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+    const cleanTestPlate = (plate || '').replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+    return (
+      vId === activeVehicle.id ||
+      vId === activeVehicle.plate ||
+      (cleanTestPlate && cleanTestPlate === cleanActivePlate)
+    );
+  };
+
   const vehicleInspections = inspections.filter(
-    (i) => !activeVehicle || i.veiculoId === activeVehicle.id
+    (i) => isVehicleMatch(i.veiculoId, (i as any).placa || (i as any).vehiclePlate)
   );
 
-  const vehicleEvents = events.filter((e) => {
-    if (activeVehicle && e.vehicle_id !== activeVehicle.id) return false;
+  const vehicleEventsAll = events.filter((e) =>
+    isVehicleMatch(e.vehicle_id, e.vehicle?.plate)
+  );
+
+  const fuelEventsCount = vehicleEventsAll.filter((e) => e.event_type === 'fuel').length;
+  const maintEventsCount = vehicleEventsAll.filter((e) => e.event_type === 'maintenance').length;
+
+  const vehicleEvents = vehicleEventsAll.filter((e) => {
     if (filterType !== 'all' && e.event_type !== filterType) return false;
     return true;
   });
@@ -164,7 +181,7 @@ export const DriverVehicleHistory: React.FC<DriverVehicleHistoryProps> = ({ vehi
               : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'
           }`}
         >
-          Todos ({events.filter((e) => !activeVehicle || e.vehicle_id === activeVehicle.id).length})
+          Todos ({vehicleEventsAll.length})
         </button>
 
         <button
@@ -177,7 +194,7 @@ export const DriverVehicleHistory: React.FC<DriverVehicleHistoryProps> = ({ vehi
           }`}
         >
           <Fuel className="w-3.5 h-3.5" />
-          <span>Abastecimentos</span>
+          <span>Abastecimentos ({fuelEventsCount})</span>
         </button>
 
         <button
@@ -190,7 +207,7 @@ export const DriverVehicleHistory: React.FC<DriverVehicleHistoryProps> = ({ vehi
           }`}
         >
           <Wrench className="w-3.5 h-3.5" />
-          <span>Manutenções</span>
+          <span>Manutenções ({maintEventsCount})</span>
         </button>
 
         <button

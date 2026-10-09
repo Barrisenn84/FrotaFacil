@@ -12,7 +12,6 @@ import {
   Loader2,
 } from 'lucide-react';
 import { useFleet } from '../../context/FleetContext';
-import { getApiAuthHeaders } from '../../services/apiAuthHelper';
 
 export const GestorFalanteAudioPlayer: React.FC = () => {
   const { currentCompany, currentUser, dailyInsights } = useFleet();
@@ -43,14 +42,10 @@ export const GestorFalanteAudioPlayer: React.FC = () => {
   const loadSummary = async () => {
     setIsLoadingAudio(true);
     try {
-      const authHeaders = await getApiAuthHeaders(
-        currentCompany?.id || 'comp-translog-01',
-        currentUser?.id || 'usr-admin',
-        'administrativo'
-      );
       const res = await fetch('/api/ai/tts-summary', {
         headers: {
-          ...authHeaders,
+          'x-company-id': currentCompany?.id || 'comp-translog-01',
+          'x-user-id': currentUser?.id || 'usr-admin',
         },
       });
       const data = await res.json();
@@ -164,11 +159,11 @@ export const GestorFalanteAudioPlayer: React.FC = () => {
               <h3 className="text-sm font-extrabold text-white">Gestor Falante</h3>
               <span className="text-[10px] uppercase font-black px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 flex items-center gap-1">
                 <Sparkles className="w-3 h-3" />
-                Voz Natural IA • gemini-3.8-flash-tts
+                Voz Inteligente em Português (Brasil)
               </span>
             </div>
             <p className="text-xs text-slate-400 mt-0.5">
-              Síntese executiva diária: manutenções iminentes, custos vs média e vencimentos
+              Resumo falado do dia: manutenções para fazer, gastos do mês e alertas importantes
             </p>
           </div>
         </div>

@@ -198,7 +198,7 @@ export const VehicleInspectionModal: React.FC<VehicleInspectionModalProps> = ({
                 <ShieldCheck className="w-6 h-6" />
               </div>
               <div>
-                <h2 className="text-lg font-black text-white">Vistoria Visual por IA</h2>
+                <h2 className="text-lg font-black text-white">Vistoria com Fotos e Inteligência Artificial</h2>
                 <p className="text-xs text-slate-400">
                   {vehicle.plate} • {vehicle.model}
                 </p>
@@ -222,7 +222,7 @@ export const VehicleInspectionModal: React.FC<VehicleInspectionModalProps> = ({
 
           <div className="space-y-3 text-xs text-slate-300">
             <p className="font-semibold text-slate-200">
-              Elimine o checklist de papel! Você fotografará os <strong>4 cantos do veículo</strong> + a <strong>banda de rodagem do pneu</strong>:
+              Sem papelada! Basta fotografar os <strong>4 lados do veículo</strong> e a <strong>banda do pneu</strong>:
             </p>
             <div className="grid grid-cols-2 gap-2 pt-1">
               <div className="p-3 bg-slate-950/80 rounded-2xl border border-slate-800 flex items-center gap-2.5">
@@ -243,14 +243,14 @@ export const VehicleInspectionModal: React.FC<VehicleInspectionModalProps> = ({
               </div>
               <div className="col-span-2 p-3 bg-slate-950/80 rounded-2xl border border-emerald-500/30 flex items-center gap-2.5">
                 <span className="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 font-black text-xs flex items-center justify-center">5</span>
-                <span className="font-bold text-emerald-300">Banda de Rodagem do Pneu (Medição do Sulco mm)</span>
+                <span className="font-bold text-emerald-300">Pneu do Veículo (Medição dos Sulcos em mm)</span>
               </div>
             </div>
 
             <div className="p-3 bg-amber-500/10 border border-amber-500/20 rounded-2xl flex items-center gap-2 text-[11px] text-amber-300">
               <Sparkles className="w-4 h-4 shrink-0 text-amber-400" />
               <span>
-                A IA detectará automaticamente avarias, desenhará o relatório visual com o <strong>Nano Banana 2</strong> e calculará os km restantes do pneu via <strong>Code Execution</strong>.
+                A inteligência artificial analisa as fotos na hora, aponta arranhões ou amassados e calcula quantos quilômetros o pneu ainda pode rodar.
               </span>
             </div>
           </div>
@@ -319,28 +319,28 @@ export const VehicleInspectionModal: React.FC<VehicleInspectionModalProps> = ({
             <Sparkles className="w-10 h-10 text-amber-400 animate-spin" />
           </div>
           <div>
-            <h2 className="text-xl font-black text-white">Análise Pericial em Execução</h2>
+            <h2 className="text-xl font-black text-white">Analisando as Fotos da Vistoria</h2>
             <p className="text-xs text-slate-400 mt-2">
-              O <strong>Gemini 3.8 Flash</strong> está analisando as 5 fotos, o <strong>Code Execution</strong> calcula a projeção do pneu e o <strong>Nano Banana 2</strong> desenha a foto anotada com círculos e setas...
+              Estamos analisando as 5 fotos, verificando o desgaste dos pneus e marcando possíveis arranhões ou amassados no veículo...
             </p>
           </div>
 
           <div className="space-y-2 text-left text-xs bg-slate-950/60 p-4 rounded-2xl border border-slate-800 font-mono text-slate-300">
             <div className="flex items-center gap-2 text-amber-400">
               <CheckCircle2 className="w-3.5 h-3.5" />
-              <span>5 fotos consolidadas</span>
+              <span>5 fotos enviadas com sucesso</span>
             </div>
             <div className="flex items-center gap-2 text-emerald-400 animate-pulse">
               <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-              <span>Extraindo lista de avarias e gravidade</span>
+              <span>Verificando lataria e identificando avarias</span>
             </div>
             <div className="flex items-center gap-2 text-cyan-400 animate-pulse">
               <Gauge className="w-3.5 h-3.5" />
-              <span>Calculando km restantes do pneu (Code Execution)</span>
+              <span>Calculando quanto tempo o pneu ainda pode rodar</span>
             </div>
             <div className="flex items-center gap-2 text-purple-400 animate-pulse">
               <Layers className="w-3.5 h-3.5" />
-              <span>Gerando anotação gráfica com Nano Banana 2</span>
+              <span>Gerando foto com marcação visual dos detalhes</span>
             </div>
           </div>
         </div>
@@ -414,7 +414,7 @@ export const VehicleInspectionModal: React.FC<VehicleInspectionModalProps> = ({
                   : 'text-slate-400 hover:text-white hover:bg-slate-800'
               }`}
             >
-              Foto Anotada (Nano Banana 2)
+              Foto com Marcações
             </button>
             <button
               type="button"
@@ -439,7 +439,7 @@ export const VehicleInspectionModal: React.FC<VehicleInspectionModalProps> = ({
                   : 'text-slate-400 hover:text-white hover:bg-slate-800'
               }`}
             >
-              Análise de Pneu (Code Execution)
+              Análise do Pneu
             </button>
             <button
               type="button"
@@ -454,7 +454,7 @@ export const VehicleInspectionModal: React.FC<VehicleInspectionModalProps> = ({
             </button>
           </div>
 
-          {/* Tab 1: FOTO ANOTADA PELO NANO BANANA 2 */}
+          {/* Tab 1: FOTO COM MARCAÇÕES */}
           {activeTab === 'annotated' && (
             <div className="space-y-3">
               <div className="relative rounded-2xl overflow-hidden border border-amber-500/30 bg-black aspect-video flex items-center justify-center shadow-xl">
@@ -469,7 +469,7 @@ export const VehicleInspectionModal: React.FC<VehicleInspectionModalProps> = ({
                 )}
                 <div className="absolute top-3 left-3 bg-black/80 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-bold text-amber-300 border border-amber-500/30 flex items-center gap-1.5">
                   <Sparkles className="w-3 h-3 text-amber-400" />
-                  <span>Nano Banana 2 (gemini-3.1-flash-image)</span>
+                  <span>Marcação Visual Automática</span>
                 </div>
               </div>
               <p className="text-xs text-slate-300 bg-slate-950/70 p-3 rounded-2xl border border-slate-800">
@@ -548,7 +548,7 @@ export const VehicleInspectionModal: React.FC<VehicleInspectionModalProps> = ({
               <div className="p-4 bg-cyan-500/10 border border-cyan-500/30 rounded-2xl text-xs space-y-1 text-cyan-200">
                 <div className="font-bold flex items-center gap-1.5 text-cyan-300">
                   <Gauge className="w-4 h-4" />
-                  <span>Cálculo de Engenharia com Code Execution:</span>
+                  <span>Como o cálculo do pneu foi feito:</span>
                 </div>
                 <p className="font-mono text-[11px] pt-1">
                   {inspectionResult.analisePneu.calculoExplicacao}

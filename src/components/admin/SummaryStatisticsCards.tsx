@@ -404,7 +404,7 @@ export const SummaryStatisticsCards: React.FC<SummaryStatisticsCardsProps> = ({
           <div>
             <div className="flex items-center justify-between text-slate-400 mb-2">
               <span className="text-xs font-bold uppercase tracking-wider text-slate-300">
-                Monthly Total Cost
+                Gasto Total da Frota
               </span>
               <div className="w-8 h-8 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 group-hover:scale-105 transition-transform">
                 <DollarSign className="w-4 h-4" />
@@ -474,7 +474,7 @@ export const SummaryStatisticsCards: React.FC<SummaryStatisticsCardsProps> = ({
           <div>
             <div className="flex items-center justify-between text-slate-400 mb-2">
               <span className="text-xs font-bold uppercase tracking-wider text-slate-300">
-                Average Fuel Efficiency
+                Média de Consumo de Combustível
               </span>
               <div className="w-8 h-8 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 group-hover:scale-105 transition-transform">
                 <Fuel className="w-4 h-4" />
@@ -514,7 +514,7 @@ export const SummaryStatisticsCards: React.FC<SummaryStatisticsCardsProps> = ({
           <div>
             <div className="flex items-center justify-between text-slate-400 mb-2">
               <span className="text-xs font-bold uppercase tracking-wider text-slate-300">
-                Active Maintenance Tasks
+                Manutenções & Revisões Ativas
               </span>
               <div
                 className={`w-8 h-8 rounded-xl border flex items-center justify-center group-hover:scale-105 transition-transform ${
@@ -573,7 +573,7 @@ export const SummaryStatisticsCards: React.FC<SummaryStatisticsCardsProps> = ({
           <div>
             <div className="flex items-center justify-between text-slate-400 mb-2">
               <span className="text-xs font-bold uppercase tracking-wider text-slate-300">
-                Disponibilidade Operacional
+                Veículos em Operação (Disponibilidade)
               </span>
               <div className="w-8 h-8 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400 group-hover:scale-105 transition-transform">
                 <Truck className="w-4 h-4" />
@@ -616,7 +616,7 @@ export const SummaryStatisticsCards: React.FC<SummaryStatisticsCardsProps> = ({
                   <DollarSign className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-base font-bold text-white">Detalhamento: Monthly Total Cost</h3>
+                  <h3 className="text-base font-bold text-white">Detalhamento dos Gastos da Frota</h3>
                   <p className="text-xs text-slate-400">
                     Período: {periodLabel} · Consolidação de combustível, peças e mão de obra
                   </p>

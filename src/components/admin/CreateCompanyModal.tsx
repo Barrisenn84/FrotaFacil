@@ -75,7 +75,7 @@ export const CreateCompanyModal: React.FC<CreateCompanyModalProps> = ({
         return;
       }
 
-      setSuccessMsg(`Empresa "${res.company.name}" cadastrada com sucesso! Tenant isolado ativo.`);
+      setSuccessMsg(`Empresa "${res.company.name}" cadastrada com sucesso! Dados protegidos e ativos.`);
       setTimeout(() => {
         setIsSubmitting(false);
         if (onSuccess && res.company) {
@@ -100,9 +100,9 @@ export const CreateCompanyModal: React.FC<CreateCompanyModalProps> = ({
               <Building2 className="w-5 h-5 stroke-[2.5]" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-white">Cadastrar Nova Empresa / Operação</h3>
+              <h3 className="text-base font-bold text-white">Cadastrar Nova Empresa ou Filial</h3>
               <p className="text-xs text-slate-400">
-                Isolamento estrito de base de dados multi-tenant por CNPJ
+                Crie uma área exclusiva e protegida para gerenciar sua frota
               </p>
             </div>
           </div>

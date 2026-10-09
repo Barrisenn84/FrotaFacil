@@ -6,10 +6,8 @@ import {
   Users,
   FileCheck,
   ShieldCheck,
-  BarChart3,
 } from 'lucide-react';
 import { OverviewTab } from './admin/OverviewTab';
-import { DataAnalyticsScreen } from './admin/DataAnalyticsScreen';
 import { VehiclesTab } from './admin/VehiclesTab';
 import { DriversTab } from './admin/DriversTab';
 import { RecordsTab } from './admin/RecordsTab';
@@ -37,7 +35,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onNavigateTo }) 
     isLoading,
   } = useFleet();
 
-  const [activeTab, setActiveTab] = useState<'overview' | 'analytics' | 'vehicles' | 'drivers' | 'records' | 'compliance'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'vehicles' | 'drivers' | 'records' | 'compliance'>('overview');
   const [isVehicleModalOpen, setIsVehicleModalOpen] = useState(false);
   const [isDriverModalOpen, setIsDriverModalOpen] = useState(false);
 
@@ -56,19 +54,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onNavigateTo }) 
         >
           <LayoutDashboard className="w-4 h-4" />
           <span>Visão Geral & Indicadores</span>
-        </button>
-
-        <button
-          type="button"
-          onClick={() => setActiveTab('analytics')}
-          className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition cursor-pointer shrink-0 ${
-            activeTab === 'analytics'
-              ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
-              : 'text-slate-400 hover:text-white hover:bg-slate-800'
-          }`}
-        >
-          <BarChart3 className="w-4 h-4" />
-          <span>Análise de Dados IA</span>
         </button>
 
         <button
@@ -120,7 +105,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onNavigateTo }) 
           }`}
         >
           <ShieldCheck className="w-4 h-4" />
-          <span>Compliance & Regras</span>
+          <span>Regras & Conformidade</span>
         </button>
       </div>
 
@@ -133,7 +118,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onNavigateTo }) 
           onConfirmEvent={confirmEvent}
           onRejectEvent={rejectEvent}
           onNavigateTo={(tab) => {
-            if (['overview', 'analytics', 'vehicles', 'drivers', 'records', 'compliance'].includes(tab)) {
+            if (['overview', 'vehicles', 'drivers', 'records', 'compliance'].includes(tab)) {
               setActiveTab(tab as any);
             } else if (onNavigateTo) {
               onNavigateTo(tab);
@@ -143,8 +128,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onNavigateTo }) 
           onOpenNewDriver={() => setIsDriverModalOpen(true)}
         />
       )}
-
-      {activeTab === 'analytics' && <DataAnalyticsScreen />}
 
       {activeTab === 'vehicles' && (
         <VehiclesTab

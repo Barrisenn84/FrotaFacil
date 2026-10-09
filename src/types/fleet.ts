@@ -337,6 +337,7 @@ export interface DashboardMetrics {
     totalPartsSpend: number;
     totalLaborSpend: number;
     totalLiters: number;
+    fuelEfficiencyByType?: Record<string, { km: number; liters: number; avgKmL: number }>;
   };
   upcomingMaintenances: Array<{
     vehicleId: string;

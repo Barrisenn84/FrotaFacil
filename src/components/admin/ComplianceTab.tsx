@@ -51,10 +51,10 @@ export const ComplianceTab: React.FC<ComplianceTabProps> = ({ company, metrics }
         <div>
           <h2 className="text-xl font-extrabold text-white flex items-center gap-2">
             <ShieldCheck className="w-5 h-5 text-emerald-400" />
-            <span>Compliance, Auditoria & Vistorias Visuais IA</span>
+            <span>Regras da Frota, Auditoria & Vistorias Visuais</span>
           </h2>
           <p className="text-xs text-slate-400">
-            Histórico pericial por veículo com laudos do Nano Banana 2 e comparação antes/depois
+            Histórico pericial com fotos dos veículos, laudos por inteligência artificial e comparação de antes e depois
           </p>
         </div>
 
@@ -336,12 +336,12 @@ export const ComplianceTab: React.FC<ComplianceTabProps> = ({ company, metrics }
               <Cpu className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-sm font-extrabold text-white">Auditoria Dual-Scan de Odômetro</h3>
-              <span className="text-[10px] text-blue-400 font-bold uppercase">Conferência Visual Cruzada</span>
+              <h3 className="text-sm font-extrabold text-white">Conferência da Nota e do Painel</h3>
+              <span className="text-[10px] text-blue-400 font-bold uppercase">Foto do Comprovante e do Odômetro</span>
             </div>
           </div>
           <p className="text-xs text-slate-400 leading-relaxed">
-            O motorista fotografa o cupom e o painel. O odômetro digitado é validado contra a quilometragem real crescente, impedindo retrocessos não autorizados.
+            O motorista fotografa o comprovante e o painel. A quilometragem é conferida automaticamente para evitar erros de digitação.
           </p>
           <div className="pt-2 flex items-center gap-2 text-xs font-bold text-blue-300">
             <CheckCircle2 className="w-4 h-4 text-blue-400" />

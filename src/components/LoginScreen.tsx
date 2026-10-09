@@ -193,14 +193,14 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
           <div className="inline-flex items-center gap-2.5 bg-gradient-to-r from-amber-500/20 via-orange-500/20 to-amber-500/10 border border-amber-500/30 px-4 py-1.5 rounded-2xl mb-3 backdrop-blur-md">
             <Truck className="w-5 h-5 text-amber-400" />
             <span className="text-xs font-black tracking-wider uppercase text-amber-300">
-              FrotaFácil AI Enterprise
+              FrotaFácil • Gestão Inteligente
             </span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-            Gestão de Frotas & Inteligência Multimodal
+            Gestão de Frotas com Leitura Inteligente
           </h1>
           <p className="mt-1 text-slate-400 text-xs sm:text-sm">
-            Auditoria fotográfica de abastecimentos, conferência por visão computacional e governança multi-tenant.
+            Fotografe comprovantes e painéis, aprove abastecimentos e controle custos da sua frota com facilidade.
           </p>
         </div>
 
@@ -221,7 +221,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
               }`}
             >
               <Lock className="w-3.5 h-3.5" />
-              <span>Acessar Plataforma</span>
+              <span>Entrar no Sistema</span>
             </button>
             <button
               type="button"
@@ -236,7 +236,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
               }`}
             >
               <UserCheck className="w-3.5 h-3.5" />
-              <span>Novo Registro Corporativo</span>
+              <span>Criar Nova Conta</span>
             </button>
           </div>
 
@@ -269,7 +269,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
                       <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />
                     </span>
                     <span className="text-[11px] font-black uppercase tracking-wider text-amber-300">
-                      Acesso Imediato para Apresentação
+                      Acesso Rápido de Demonstração
                     </span>
                   </div>
                   <span className="px-2 py-0.5 rounded-full bg-amber-400 text-slate-950 font-black text-[10px] tracking-wide uppercase">
@@ -284,19 +284,19 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
                   className="w-full py-3.5 px-4 bg-gradient-to-r from-amber-500 via-amber-400 to-orange-500 hover:from-amber-400 hover:via-amber-300 hover:to-orange-400 active:scale-[0.99] text-slate-950 font-black text-xs sm:text-sm rounded-xl flex items-center justify-center gap-2.5 shadow-lg shadow-amber-500/25 transition cursor-pointer disabled:opacity-50"
                 >
                   <ShieldCheck className="w-5 h-5 stroke-[2.5]" />
-                  <span>ENTRAR COMO GESTOR (TUDO LIBERADO)</span>
+                  <span>ENTRAR COMO GESTOR (ACESSO COMPLETO)</span>
                   <ArrowRight className="w-4 h-4 stroke-[3]" />
                 </button>
 
                 <p className="mt-2 text-center text-[10px] text-amber-200/90 font-medium">
-                  Acesso total irrestrito: Métricas de IA, Frota, Motoristas, Aprovação de Cupons, Gráficos e Governança Multi-tenant.
+                  Acesso total: Painel da frota, aprovação de abastecimentos, cadastro de motoristas e relatórios completos.
                 </p>
               </div>
 
-              {/* Google Sign-In Corporativo */}
+              {/* Login com Google */}
               <div>
                 <span className="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2">
-                  Ou Acesso Seguro com Firebase Auth
+                  Ou acesse com sua conta Google
                 </span>
                 <button
                   type="button"
@@ -322,7 +322,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
                       d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
                     />
                   </svg>
-                  <span>{isLoading ? 'Autenticando...' : 'Entrar com Conta Google (Google Sign-In)'}</span>
+                  <span>{isLoading ? 'Entrando com Google...' : 'Entrar com a Conta Google'}</span>
                 </button>
               </div>
 
@@ -332,15 +332,15 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
                   <div className="w-full border-t border-slate-800" />
                 </div>
                 <span className="relative bg-slate-900 px-3 text-[10px] uppercase tracking-wider text-slate-500 font-bold">
-                  Ou credenciais corporativas
+                  Ou acesse com e-mail e senha
                 </span>
               </div>
 
-              {/* Seletor de Empresa / Operação com Opção de Cadastrar Nova */}
+              {/* Seletor de Empresa com Opção de Cadastrar Nova */}
               <div>
                 <div className="flex items-center justify-between mb-1.5">
                   <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-400">
-                    Empresa / Operação (Isolamento de Base)
+                    Sua Empresa ou Filial
                   </label>
                   <button
                     type="button"
@@ -371,7 +371,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
                 </div>
                 <p className="mt-1 text-[10px] text-slate-500 flex items-center gap-1">
                   <ShieldCheck className="w-3 h-3 text-emerald-400" />
-                  <span>Isolamento estrito: dados e frotas escopados por company_id.</span>
+                  <span>Seus dados ficam 100% seguros e separados apenas para sua empresa.</span>
                 </p>
               </div>
 
@@ -454,14 +454,14 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
               <div className="pb-1 border-b border-slate-800">
                 <h3 className="text-sm font-bold text-white flex items-center gap-1.5">
                   <UserCheck className="w-4 h-4 text-amber-400" />
-                  <span>Formulário de Cadastro Corporativo</span>
+                  <span>Cadastro de Novo Usuário</span>
                 </h3>
                 <p className="text-[11px] text-slate-400">
-                  Preencha seus dados reais. O sistema valida automaticamente o nome, e-mail e celular/WhatsApp.
+                  Preencha seus dados reais para criar sua conta. Validamos na hora para garantir a sua segurança.
                 </p>
               </div>
 
-              {/* CAMPO 1: NOME COMPLETO COM VALIDAÇÃO VERÍDICA */}
+              {/* CAMPO 1: NOME COMPLETO COM VALIDAÇÃO */}
               <div>
                 <div className="flex items-center justify-between mb-1">
                   <label className="text-[11px] font-bold text-slate-300 uppercase tracking-wider">
@@ -476,7 +476,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
                       {nameValidation.isValid ? (
                         <>
                           <CheckCircle2 className="w-3 h-3" />
-                          <span>Dado Verídico</span>
+                          <span>Nome Válido</span>
                         </>
                       ) : (
                         <>
@@ -529,7 +529,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
                       {emailValidation.isValid ? (
                         <>
                           <CheckCircle2 className="w-3 h-3" />
-                          <span>E-mail Autêntico</span>
+                          <span>E-mail Válido</span>
                         </>
                       ) : (
                         <>
@@ -719,22 +719,22 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
           )}
         </div>
 
-        {/* Security & Architecture Highlights */}
+        {/* Destaques de Segurança e Facilidades */}
         <div className="grid grid-cols-3 gap-3 text-center text-xs text-slate-400">
           <div className="bg-slate-900/50 border border-slate-800/80 rounded-xl p-3">
             <CheckCircle2 className="w-4 h-4 text-emerald-400 mx-auto mb-1" />
-            <div className="font-semibold text-slate-300">Isolamento Multiempresa</div>
-            <div className="text-[10px] text-slate-500">Bases separadas por tenant</div>
+            <div className="font-semibold text-slate-300">Dados Protegidos</div>
+            <div className="text-[10px] text-slate-500">Cada empresa tem sua base exclusiva</div>
           </div>
           <div className="bg-slate-900/50 border border-slate-800/80 rounded-xl p-3">
             <CheckCircle2 className="w-4 h-4 text-amber-400 mx-auto mb-1" />
-            <div className="font-semibold text-slate-300">Gemini 3.8 Flash</div>
-            <div className="text-[10px] text-slate-500">Extração visual em &lt; 2s</div>
+            <div className="font-semibold text-slate-300">Inteligência Artificial</div>
+            <div className="text-[10px] text-slate-500">Lê notas e comprovantes em segundos</div>
           </div>
           <div className="bg-slate-900/50 border border-slate-800/80 rounded-xl p-3">
             <CheckCircle2 className="w-4 h-4 text-blue-400 mx-auto mb-1" />
-            <div className="font-semibold text-slate-300">Auditoria & Anti-Fraude</div>
-            <div className="text-[10px] text-slate-500">Odômetro e notas auditadas</div>
+            <div className="font-semibold text-slate-300">Conferência Segura</div>
+            <div className="text-[10px] text-slate-500">Compara o comprovante com o painel</div>
           </div>
         </div>
       </div>

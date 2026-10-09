@@ -50,6 +50,7 @@ export const DriverHome: React.FC<DriverHomeProps> = ({ onOpenHistory }) => {
   const activeVehicle = vehicles.find((v) => v.id === selectedVehicleId) || vehicles[0];
 
   const [schedulingPredictive, setSchedulingPredictive] = useState<boolean>(false);
+  const [scheduledVehicles, setScheduledVehicles] = useState<Record<string, string>>({});
 
   // Projeção preditiva do Agente Mecânico para o veículo selecionado
   const activePredictive = dailyInsights?.agenteMecanico?.projecoesPreditivas?.find(
@@ -77,10 +78,50 @@ export const DriverHome: React.FC<DriverHomeProps> = ({ onOpenHistory }) => {
   const [routeWeather, setRouteWeather] = useState<RouteWeatherData | null>(null);
 
   useEffect(() => {
-    fetchRouteWeather('sao paulo')
-      .then((data) => setRouteWeather(data))
-      .catch((err) => console.warn('Erro ao carregar clima para motorista:', err));
-  }, []);
+    let isCancelled = false;
+
+    const fallbackCity = currentCompany?.name?.toLowerCase().includes('rio')
+      ? 'rio de janeiro'
+      : currentCompany?.name?.toLowerCase().includes('sul') || currentCompany?.name?.toLowerCase().includes('curitiba')
+      ? 'curitiba'
+      : 'sao paulo';
+
+    if (typeof window !== 'undefined' && 'geolocation' in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          if (isCancelled) return;
+          fetchRouteWeather({
+            lat: pos.coords.latitude,
+            lng: pos.coords.longitude,
+            cityName: 'Sua Rota Atual',
+          })
+            .then((data) => {
+              if (!isCancelled) setRouteWeather(data);
+            })
+            .catch((err) => console.warn('Erro ao carregar clima por coordenadas:', err));
+        },
+        () => {
+          if (isCancelled) return;
+          fetchRouteWeather(fallbackCity)
+            .then((data) => {
+              if (!isCancelled) setRouteWeather(data);
+            })
+            .catch((err) => console.warn('Erro ao carregar clima para motorista:', err));
+        },
+        { timeout: 5000, maximumAge: 600000 }
+      );
+    } else {
+      fetchRouteWeather(fallbackCity)
+        .then((data) => {
+          if (!isCancelled) setRouteWeather(data);
+        })
+        .catch((err) => console.warn('Erro ao carregar clima para motorista:', err));
+    }
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [currentCompany?.id, currentCompany?.name]);
 
   // Start registering
   const startRegister = (type: 'abastecimento' | 'manutencao') => {
@@ -226,7 +267,7 @@ export const DriverHome: React.FC<DriverHomeProps> = ({ onOpenHistory }) => {
       {flowState === 'capturing_odometer' && (
         <div className="fixed inset-0 z-50 bg-slate-950 flex flex-col">
           <div className="p-3 bg-amber-500/20 border-b border-amber-500/30 text-center text-xs font-bold text-amber-300">
-            Foto 2 de 2: Aponte a câmera agora para o painel do veículo para leitura do Odômetro (Dual-Scan)
+            Foto 2 de 2: Aponte a câmera para o painel do veículo para registrar a quilometragem
           </div>
           <CameraCapture
             title="Fotografar Odômetro no Painel"
@@ -247,13 +288,13 @@ export const DriverHome: React.FC<DriverHomeProps> = ({ onOpenHistory }) => {
           <div className="w-20 h-20 rounded-3xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center mb-6 animate-pulse">
             <Sparkles className="w-10 h-10 text-amber-400 animate-spin" />
           </div>
-          <h2 className="text-xl sm:text-2xl font-black text-white">Analisando Comprovante com IA</h2>
+          <h2 className="text-xl sm:text-2xl font-black text-white">Lendo o Comprovante com Inteligência Artificial</h2>
           <p className="mt-2 text-sm text-slate-400 max-w-sm">
-            O Gemini 3.8 Flash está extraindo valores, odômetro, posto e cruzando as regras de auditoria da frota...
+            O sistema está identificando os valores, quantidade de litros, posto e quilometragem automaticamente...
           </p>
           <div className="mt-6 flex items-center gap-2 text-xs text-amber-400 font-semibold bg-amber-500/10 px-3 py-1.5 rounded-full border border-amber-500/20">
             <Layers className="w-3.5 h-3.5" />
-            <span>Dual-Scan & Verificação de Fraude em Execução</span>
+            <span>Conferência Automática da Nota e do Painel</span>
           </div>
         </div>
       )}
@@ -413,9 +454,9 @@ export const DriverHome: React.FC<DriverHomeProps> = ({ onOpenHistory }) => {
             <div className="flex items-center gap-2.5">
               <Camera className="w-4 h-4 text-amber-400" />
               <div>
-                <div className="text-xs font-bold text-white">Modo Dual-Scan (Cupom + Painel)</div>
+                <div className="text-xs font-bold text-white">Leitura Dupla de Segurança (Nota + Painel)</div>
                 <div className="text-[11px] text-slate-400">
-                  Lê o cupom e cruza com a foto do odômetro do veículo para eliminar erros
+                  Lê a nota fiscal e confere com a foto do painel do carro para evitar erros e fraudes
                 </div>
               </div>
             </div>
@@ -461,23 +502,37 @@ export const DriverHome: React.FC<DriverHomeProps> = ({ onOpenHistory }) => {
                   {activePredictive.serviceDescription} (Restam {activePredictive.kmRemaining} km)
                 </div>
 
-                <button
-                  type="button"
-                  onClick={async () => {
-                    setSchedulingPredictive(true);
-                    const res = await schedulePredictiveMaintenance(activePredictive.autoSchedulePayload);
-                    setSchedulingPredictive(false);
-                    if (res.success) {
-                      setSuccessMessage(res.message || 'Revisão preditiva agendada com sucesso!');
-                      setTimeout(() => setSuccessMessage(null), 5000);
-                    }
-                  }}
-                  disabled={schedulingPredictive}
-                  className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black text-xs flex items-center gap-1.5 shadow-md shadow-emerald-500/20 transition cursor-pointer active:scale-95 disabled:opacity-50"
-                >
-                  <CheckCircle2 className="w-3.5 h-3.5" />
-                  <span>{schedulingPredictive ? 'Agendando...' : 'Aceitar e Agendar'}</span>
-                </button>
+                {scheduledVehicles[activeVehicle?.id || ''] ? (
+                  <div className="px-3.5 py-1.5 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 font-extrabold text-xs flex items-center gap-1.5 shadow-sm">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>Revisão Agendada</span>
+                  </div>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      setSchedulingPredictive(true);
+                      setErrorMessage(null);
+                      const res = await schedulePredictiveMaintenance(activePredictive.autoSchedulePayload);
+                      setSchedulingPredictive(false);
+                      if (res.success) {
+                        setScheduledVehicles((prev) => ({
+                          ...prev,
+                          [activeVehicle?.id || '']: res.message || 'Agendada com sucesso',
+                        }));
+                        setSuccessMessage(res.message || 'Revisão preditiva agendada com sucesso na oficina credenciada!');
+                        setTimeout(() => setSuccessMessage(null), 6000);
+                      } else {
+                        setErrorMessage(res.error || 'Não foi possível agendar a revisão no momento.');
+                      }
+                    }}
+                    disabled={schedulingPredictive}
+                    className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black text-xs flex items-center gap-1.5 shadow-md shadow-emerald-500/20 transition cursor-pointer active:scale-95 disabled:opacity-50"
+                  >
+                    <CheckCircle2 className="w-3.5 h-3.5" />
+                    <span>{schedulingPredictive ? 'Agendando...' : 'Aceitar e Agendar'}</span>
+                  </button>
+                )}
               </div>
             </div>
           )}

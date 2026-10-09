@@ -2,13 +2,7 @@ import { Router, Response } from 'express';
 import crypto from 'crypto';
 import { GoogleGenAI } from '@google/genai';
 import { db } from './db.js';
-import {
-  AuthenticatedRequest,
-  authMiddleware,
-  requireAuth,
-  requireAdmin,
-  generateAuthToken,
-} from './authMiddleware.js';
+import { AuthenticatedRequest, authMiddleware, requireAuth, requireAdmin } from './authMiddleware.js';
 import { extractReceiptWithAI } from './aiService.js';
 import { inspectVehicleWithAI } from './inspectionService.js';
 import {
@@ -63,9 +57,6 @@ apiRouter.post('/auth/login', (req, res) => {
     driverProfile = db.getDriverByUserId(targetCompanyId, user.id);
   }
 
-  // Geração do token criptográfico assinado (HMAC-SHA256)
-  const token = generateAuthToken(user, company);
-
   db.logAudit(
     targetCompanyId,
     user.id,
@@ -78,42 +69,9 @@ apiRouter.post('/auth/login', (req, res) => {
 
   return res.json({
     success: true,
-    token,
     user,
     company,
     driver: driverProfile,
-  });
-});
-
-// Endpoint para emissão/troca de token de autenticação (ex: pós Google Sign-In)
-apiRouter.post('/auth/token', (req, res) => {
-  const { userId, email, companyId, role, name } = req.body;
-  const targetCompanyId = companyId || 'comp-translog-01';
-  const company = db.getCompany(targetCompanyId) || {
-    id: targetCompanyId,
-    name: 'Empresa Ativa',
-    cnpj: '00.000.000/0001-00',
-    maxTankMarginPercent: 10,
-    status: 'active' as const,
-    created_at: new Date().toISOString(),
-  };
-
-  const userObj = {
-    id: userId || `usr-${Date.now()}`,
-    company_id: company.id,
-    email: email || 'usuario@frotafacil.com.br',
-    name: name || 'Usuário Autenticado',
-    role: (role === 'motorista' ? 'motorista' : 'administrativo') as any,
-    active: true,
-    created_at: new Date().toISOString(),
-  };
-
-  const token = generateAuthToken(userObj, company);
-  return res.json({
-    success: true,
-    token,
-    user: userObj,
-    company,
   });
 });
 
@@ -761,13 +719,24 @@ apiRouter.post('/ai/schedule-predictive-maintenance', async (req: AuthenticatedR
     const companyId = req.company?.id || (req.headers['x-company-id'] as string) || 'comp-translog-01';
     const { vehicleId, vehiclePlate, maintenanceType, suggestedDate, estimatedKm } = req.body;
 
-    if (!vehicleId) {
+    if (!vehicleId && !vehiclePlate) {
       return res.status(400).json({ error: 'Veículo obrigatório para agendamento preditivo.' });
     }
 
-    const vehicle = db.getVehicle(companyId, vehicleId);
+    let vehicle = vehicleId ? db.getVehicle(companyId, vehicleId) : undefined;
+    if (!vehicle && vehiclePlate) {
+      vehicle = db.getVehicleByPlate(companyId, vehiclePlate);
+    }
+    if (!vehicle && vehicleId) {
+      vehicle = db.getVehicleByPlate(companyId, vehicleId);
+    }
+    if (!vehicle) {
+      const allVehicles = db.getVehicles(companyId);
+      vehicle = allVehicles[0];
+    }
+
     if (vehicle) {
-      db.updateVehicle(companyId, vehicleId, {
+      db.updateVehicle(companyId, vehicle.id, {
         next_maintenance_km: Number(estimatedKm || vehicle.current_km + 10000),
         next_maintenance_desc: maintenanceType || 'Revisão Preventiva Agendada',
       });
@@ -853,76 +822,6 @@ Responda em formato JSON com a seguinte estrutura:
       console.info('[Copiloto Estratégico] Quota temporária atingida (429). Ativando inferência local.');
     } else {
       console.info('[Copiloto Estratégico] Modo local ativado.');
-    }
-    return res.json({
-      success: false,
-      message: 'Fallback local ativado',
-    });
-  }
-});
-
-// Análise Avançada de Dados de Consumo e Gastos com Gemini 3.8 Flash
-apiRouter.post('/ai/analytics-insights', async (req: AuthenticatedRequest, res: Response) => {
-  try {
-    const { analyticsPayload } = req.body;
-
-    const ai = new GoogleGenAI({
-      apiKey: process.env.GEMINI_API_KEY || '',
-      httpOptions: { headers: { 'User-Agent': 'aistudio-build-frota-facil' } },
-    });
-
-    const prompt = `Você é o ANALISTA SÊNIOR DE DADOS E EFICIÊNCIA DE FROTAS do sistema FrotaFácil AI.
-Analise com rigor estatístico os dados de consumo médio de combustível e gastos mensais da frota:
-${JSON.stringify(analyticsPayload || {}, null, 2)}
-
-Seu objetivo é gerar um parecer executivo de alto impacto com foco primordial em ECONOMIA DE CUSTOS, detectando desvios de consumo, veículos de maior gasto e oportunidades práticas para economizar no mês.
-
-Responda ESTRITAMENTE em formato JSON com esta estrutura:
-{
-  "resumoExecutivo": string,
-  "diagnosticoConsumo": string,
-  "diagnosticoGastos": string,
-  "economiaPotencialEstimadaBrl": number,
-  "economiaPercentual": number,
-  "veiculoMaisEficiente": string,
-  "veiculoMaiorAtencao": string,
-  "acoesRecomendadas": [
-    {
-      "titulo": string,
-      "descricao": string,
-      "impactoEstimadoBrl": number,
-      "prioridade": "alta" | "media" | "baixa"
-    }
-  ],
-  "conclusaoTCO": string
-}`;
-
-    const response = await ai.models.generateContent({
-      model: 'gemini-3.8-flash',
-      contents: prompt,
-      config: {
-        responseMimeType: 'application/json',
-      },
-    });
-
-    const parsed = JSON.parse(response.text || '{}');
-    return res.json({
-      success: true,
-      data: {
-        ...parsed,
-        generatedAt: new Date().toISOString(),
-        modelBadge: 'Gemini 3.8 Flash • IA Generativa Ativa',
-      },
-    });
-  } catch (err: any) {
-    const isQuota =
-      err?.status === 'RESOURCE_EXHAUSTED' ||
-      err?.message?.includes('429') ||
-      err?.message?.includes('quota');
-    if (isQuota) {
-      console.info('[Gemini Analytics] Quota temporária atingida (429). Ativando inferência local.');
-    } else {
-      console.info('[Gemini Analytics] Modo local ativado.');
     }
     return res.json({
       success: false,

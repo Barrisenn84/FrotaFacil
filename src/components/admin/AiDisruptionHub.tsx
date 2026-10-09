@@ -330,14 +330,14 @@ export const AiDisruptionHub: React.FC = () => {
             <div>
               <div className="flex items-center gap-2">
                 <h3 className="text-base sm:text-lg font-black text-white tracking-tight">
-                  Central de Inteligência Disruptiva & APIs Gratuitas
+                  Central de Ferramentas & Consultas da Frota
                 </h3>
                 <span className="px-2 py-0.5 rounded-full bg-gradient-to-r from-amber-500/20 to-indigo-500/20 border border-amber-500/40 text-[10px] font-bold text-amber-300">
-                  Open APIs + Gemini IA
+                  Consultas Oficiais + Inteligência Artificial
                 </span>
               </div>
               <p className="text-xs text-slate-400 mt-0.5">
-                Clima rodoviário ao vivo (Open-Meteo), cotação FIPE oficial, auditoria Receita Federal (BrasilAPI/CNPJ.ws) e OSRM Multi-Bases.
+                Previsão do tempo nas rodovias, cotação oficial na Tabela FIPE, consulta de CNPJ na Receita Federal e cálculo de rotas por CEP.
               </p>
             </div>
           </div>
@@ -355,7 +355,7 @@ export const AiDisruptionHub: React.FC = () => {
             }`}
           >
             <Sparkles className="w-3.5 h-3.5" />
-            <span>Copiloto Estratégico</span>
+            <span>Assistente Inteligente</span>
           </button>
 
           <button
@@ -368,7 +368,7 @@ export const AiDisruptionHub: React.FC = () => {
             }`}
           >
             <CloudRain className="w-3.5 h-3.5" />
-            <span>Clima & Pista (Open-Meteo)</span>
+            <span>Clima nas Rodovias</span>
           </button>
 
           <button
@@ -381,7 +381,7 @@ export const AiDisruptionHub: React.FC = () => {
             }`}
           >
             <Building2 className="w-3.5 h-3.5" />
-            <span>Auditoria CNPJ (BrasilAPI)</span>
+            <span>Consultar CNPJ</span>
           </button>
 
           <button
@@ -394,7 +394,7 @@ export const AiDisruptionHub: React.FC = () => {
             }`}
           >
             <Car className="w-3.5 h-3.5" />
-            <span>Tabela FIPE (BrasilAPI)</span>
+            <span>Tabela FIPE</span>
           </button>
 
           <button
@@ -407,7 +407,7 @@ export const AiDisruptionHub: React.FC = () => {
             }`}
           >
             <Navigation className="w-3.5 h-3.5" />
-            <span>Rotas & CEP (OSRM)</span>
+            <span>Cálculo de Rotas por CEP</span>
           </button>
 
           <button
@@ -420,7 +420,7 @@ export const AiDisruptionHub: React.FC = () => {
             }`}
           >
             <FileText className="w-3.5 h-3.5" />
-            <span>Validador SEFAZ NFC-e</span>
+            <span>Validar Nota Fiscal (SEFAZ)</span>
           </button>
 
           <button
@@ -433,7 +433,7 @@ export const AiDisruptionHub: React.FC = () => {
             }`}
           >
             <Leaf className="w-3.5 h-3.5" />
-            <span>Simulador Elétrico ESG</span>
+            <span>Simulador de Carros Elétricos</span>
           </button>
         </div>
       </div>

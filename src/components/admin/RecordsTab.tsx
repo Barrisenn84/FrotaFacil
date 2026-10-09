@@ -108,7 +108,7 @@ export const RecordsTab: React.FC<RecordsTabProps> = ({ events }) => {
             className="px-3.5 py-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black text-xs rounded-xl flex items-center gap-1.5 transition cursor-pointer shadow-lg shadow-amber-500/10"
           >
             <Sparkles className="w-3.5 h-3.5" />
-            <span>Negociação B2B com Postos (IA)</span>
+            <span>Proposta de Desconto em Postos</span>
           </button>
         </div>
       </div>

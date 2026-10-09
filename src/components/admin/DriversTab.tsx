@@ -157,7 +157,7 @@ export const DriversTab: React.FC<DriversTabProps> = ({
                         <div className="flex items-center justify-between text-[11px]">
                           <span className="flex items-center gap-1 text-slate-400">
                             <Leaf className="w-3 h-3 text-emerald-400" />
-                            <span>Eco-Driving IA:</span>
+                            <span>Direção Econômica:</span>
                           </span>
                           <span className="font-black text-emerald-400">
                             {coach.ecoDrivingScore}/100 • {coach.nivelEficiencia}
@@ -167,7 +167,7 @@ export const DriversTab: React.FC<DriversTabProps> = ({
                         <div className="p-2 rounded-lg bg-indigo-950/30 border border-indigo-500/20 text-[10px] text-indigo-200">
                           <div className="font-bold text-indigo-300 flex items-center gap-1 mb-0.5">
                             <Sparkles className="w-2.5 h-2.5" />
-                            Dica Personalizada do AI Coach:
+                            Dica para Economizar Combustível:
                           </div>
                           <p className="line-clamp-2 leading-relaxed text-slate-300">
                             {coach.dicasComportamentais[0]}

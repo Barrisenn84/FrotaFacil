@@ -24,7 +24,7 @@ import { ResetAllDataModal } from './ResetAllDataModal';
 import { DashboardPDFExportModal } from './DashboardPDFExportModal';
 import { MaintenanceVisualNotificationBanner } from './MaintenanceVisualNotificationBanner';
 import { FuelCostPerKmLineChart } from './FuelCostPerKmLineChart';
-import { Sparkles, Trash2, FileDown, BarChart3 } from 'lucide-react';
+import { Sparkles, Trash2, FileDown } from 'lucide-react';
 
 interface OverviewTabProps {
   company: Company | null;
@@ -113,13 +113,13 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <span className="text-xs font-bold uppercase tracking-wider text-amber-400">
-            Painel de Gestão Corporativa
+            Painel de Controle da Frota
           </span>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
             {company?.name || 'TransLog Transportes'}
           </h1>
           <p className="text-xs text-slate-400">
-            Indicadores consolidados, controle de custos e integridade de odômetros
+            Resumo completo dos gastos, quilometragem e saúde dos veículos
           </p>
         </div>
 
@@ -130,7 +130,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
             className="px-3 py-2 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-xs font-bold text-emerald-300 border border-emerald-500/30 flex items-center gap-1.5 transition cursor-pointer"
           >
             <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
-            <span>Onboarding & Espelho</span>
+            <span>Nova Empresa & Planilha</span>
           </button>
           {onOpenNewVehicle && (
             <button
@@ -139,7 +139,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
               className="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-200 border border-slate-700 flex items-center gap-1.5 transition cursor-pointer"
             >
               <Plus className="w-3.5 h-3.5 text-amber-400" />
-              <span>Novo Veículo</span>
+              <span>Cadastrar Veículo</span>
             </button>
           )}
           {onOpenNewDriver && (
@@ -149,38 +149,28 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
               className="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-200 border border-slate-700 flex items-center gap-1.5 transition cursor-pointer"
             >
               <Plus className="w-3.5 h-3.5 text-blue-400" />
-              <span>Novo Motorista</span>
+              <span>Cadastrar Motorista</span>
             </button>
           )}
 
           <button
             type="button"
-            onClick={() => onNavigateTo?.('analytics')}
-            className="px-3.5 py-2 rounded-xl bg-indigo-500/15 hover:bg-indigo-500/25 text-xs font-bold text-indigo-300 border border-indigo-500/40 flex items-center gap-1.5 transition cursor-pointer shadow-md shadow-indigo-500/10"
-            title="Abrir tela dedicada de Análise de Dados e Recharts com Gemini IA"
-          >
-            <BarChart3 className="w-3.5 h-3.5 text-indigo-400" />
-            <span>Análise de Dados Recharts</span>
-          </button>
-
-          <button
-            type="button"
             onClick={() => setShowPDFExportModal(true)}
             className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-500/20 to-orange-500/20 hover:from-amber-500/30 hover:to-orange-500/30 text-xs font-bold text-amber-300 border border-amber-500/40 flex items-center gap-1.5 transition cursor-pointer shadow-md shadow-amber-500/10"
-            title="Exportar dados do dashboard para PDF executivo para apresentações externas"
+            title="Baixar relatório completo em PDF para imprimir ou compartilhar"
           >
             <FileDown className="w-3.5 h-3.5 text-amber-400" />
-            <span>Exportar PDF</span>
+            <span>Baixar Relatório em PDF</span>
           </button>
 
           <button
             type="button"
             onClick={() => setShowResetModal(true)}
             className="px-3 py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-xs font-bold text-rose-300 border border-rose-500/30 flex items-center gap-1.5 transition cursor-pointer"
-            title="Exclui todos os dados e zera todos os campos do sistema"
+            title="Apaga todos os dados de teste e zera os campos do sistema"
           >
             <Trash2 className="w-3.5 h-3.5 text-rose-400" />
-            <span>Zerar Tudo</span>
+            <span>Limpar Tudo</span>
           </button>
         </div>
       </div>

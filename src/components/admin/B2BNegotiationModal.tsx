@@ -58,14 +58,14 @@ export const B2BNegotiationModal: React.FC<B2BNegotiationModalProps> = ({
             <div>
               <div className="flex items-center gap-2">
                 <h3 className="text-base font-black text-white">
-                  Gerador de Negociação B2B com Postos (IA)
+                  Proposta de Desconto em Postos de Combustível
                 </h3>
                 <span className="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-[10px] font-bold">
                   Parceria Comercial
                 </span>
               </div>
               <p className="text-xs text-slate-400">
-                Gere propostas de desconto por volume corporativo com 1 clique
+                Crie uma carta profissional para negociar desconto por quantidade de litros com postos parceiros
               </p>
             </div>
           </div>

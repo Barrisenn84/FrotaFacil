@@ -55,14 +55,14 @@ export const VehicleDriverLinksManagement: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 mb-6 border-b border-slate-800">
         <div>
           <span className="text-xs font-bold uppercase tracking-wider text-amber-400">
-            Relacionamentos Operacionais ({currentCompany?.name})
+            Relacionamentos da Frota ({currentCompany?.name})
           </span>
           <h1 className="text-2xl font-black text-white flex items-center gap-2">
             <LinkIcon className="w-6 h-6 text-amber-400" />
-            <span>Vínculos Many-to-Many: Veículo ↔ Motorista</span>
+            <span>Vínculos: Quem Dirige Qual Veículo</span>
           </h1>
           <p className="text-xs text-slate-400">
-            Associação de motoristas a múltiplos veículos da frota com trilha histórica de responsabilidade
+            Defina com facilidade quais motoristas estão autorizados a dirigir cada veículo da empresa
           </p>
         </div>
 
@@ -76,7 +76,7 @@ export const VehicleDriverLinksManagement: React.FC = () => {
           className="px-4 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-extrabold text-xs sm:text-sm rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 transition cursor-pointer"
         >
           <Plus className="w-4 h-4 stroke-[3]" />
-          <span>Novo Vínculo Operacional</span>
+          <span>Vincular Motorista a Veículo</span>
         </button>
       </div>
 

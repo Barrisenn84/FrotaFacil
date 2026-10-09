@@ -33,7 +33,6 @@ import {
   appendFuelingToGoogleSheet,
   appendMaintenanceToGoogleSheet,
 } from '../services/googleSheetsService';
-import { getApiAuthHeaders } from '../services/apiAuthHelper';
 
 interface FleetContextType {
   currentCompany: Company | null;
@@ -159,6 +158,7 @@ export const FleetProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [documents, setDocuments] = useState<DocumentoVeiculo[]>([]);
   const [inspections, setInspections] = useState<VehicleInspection[]>([]);
   const [allDailyInsights, setAllDailyInsights] = useState<DailyFleetInsights[]>([]);
+  const [serverEvents, setServerEvents] = useState<FleetEvent[]>([]);
   const [links, setLinks] = useState<VehicleDriverLink[]>([]);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [offlineDrafts, setOfflineDrafts] = useState<OfflineDraft[]>([]);
@@ -327,7 +327,62 @@ export const FleetProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
   }, [currentCompany?.id]);
 
-  // 3. Mapeamento de eventos consolidados a partir do Firestore em tempo real
+  // 2.1 Buscar dados consolidados do backend local (/api/events, /api/vehicles, /api/drivers)
+  useEffect(() => {
+    let isCancelled = false;
+    const fetchBackendSeed = async () => {
+      try {
+        const headers: Record<string, string> = {
+          'x-user-id': currentUser?.id || 'usr-admin-translog',
+        };
+        const [evRes, vehRes, drvRes] = await Promise.allSettled([
+          fetch('/api/events', { headers }),
+          fetch('/api/vehicles', { headers }),
+          fetch('/api/drivers', { headers }),
+        ]);
+
+        if (!isCancelled && evRes.status === 'fulfilled' && evRes.value.ok) {
+          const evData = await evRes.value.json();
+          if (evData?.events && Array.isArray(evData.events)) {
+            setServerEvents(evData.events);
+          }
+        }
+
+        if (!isCancelled && vehRes.status === 'fulfilled' && vehRes.value.ok) {
+          const vData = await vehRes.value.json();
+          if (vData?.vehicles && Array.isArray(vData.vehicles)) {
+            setVehicles((prev) => {
+              if (prev.length === 0) return vData.vehicles;
+              const ids = new Set(prev.map((v) => v.id));
+              const missing = vData.vehicles.filter((v: Vehicle) => !ids.has(v.id));
+              return missing.length > 0 ? [...prev, ...missing] : prev;
+            });
+          }
+        }
+
+        if (!isCancelled && drvRes.status === 'fulfilled' && drvRes.value.ok) {
+          const dData = await drvRes.value.json();
+          if (dData?.drivers && Array.isArray(dData.drivers)) {
+            setDrivers((prev) => {
+              if (prev.length === 0) return dData.drivers;
+              const ids = new Set(prev.map((d) => d.id));
+              const missing = dData.drivers.filter((d: Driver) => !ids.has(d.id));
+              return missing.length > 0 ? [...prev, ...missing] : prev;
+            });
+          }
+        }
+      } catch (err) {
+        console.warn('Backend sync fallback notice:', err);
+      }
+    };
+
+    fetchBackendSeed();
+    return () => {
+      isCancelled = true;
+    };
+  }, [currentCompany?.id, currentUser?.id]);
+
+  // 3. Mapeamento de eventos consolidados a partir do Firestore e backend em tempo real
   const events = useMemo<FleetEvent[]>(() => {
     const list: FleetEvent[] = [];
 
@@ -402,8 +457,30 @@ export const FleetProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       });
     });
 
+    // Mesclar com eventos do servidor que ainda não estejam na lista
+    const seenIds = new Set(list.map((e) => e.id));
+    serverEvents.forEach((se) => {
+      if (!seenIds.has(se.id)) {
+        const v =
+          se.vehicle ||
+          vehicles.find(
+            (veh) =>
+              veh.id === se.vehicle_id ||
+              veh.plate === se.vehicle_id ||
+              veh.plate === (se as any).plate
+          );
+        const d = se.driver || drivers.find((drv) => drv.id === se.driver_id);
+        list.push({
+          ...se,
+          vehicle: v,
+          driver: d,
+        });
+        seenIds.add(se.id);
+      }
+    });
+
     return list.sort((a, b) => new Date(b.event_date).getTime() - new Date(a.event_date).getTime());
-  }, [rawFuelings, rawMaintenance, vehicles, drivers, currentCompany]);
+  }, [rawFuelings, rawMaintenance, serverEvents, vehicles, drivers, currentCompany]);
 
   // 4. METODOLOGIA DA PLANILHA DE CONTROLE DE FROTA (Cálculo Oficial)
   // a) KM rodado = maior odômetro registrado nos abastecimentos menos o kmInicial cadastrado no veículo.
@@ -440,11 +517,29 @@ export const FleetProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     // Gastos com Combustível e Litros
     let totalFuelSpend = 0;
     let totalLiters = 0;
+    const fuelStatsByType: Record<string, { km: number; liters: number; avgKmL: number }> = {};
+
     rawFuelings.forEach((f) => {
       if (f.status !== 'rejected') {
-        totalFuelSpend += Number(f.valorTotal || f.total_amount || 0);
-        totalLiters += Number(f.litros || f.liters || 0);
+        const spend = Number(f.valorTotal || f.total_amount || 0);
+        const lts = Number(f.litros || f.liters || 0);
+        const fType = String(f.combustivel || f.fuel_type || 'Diesel S10');
+        const kmDelta = Number(f.calculated_km_delta || f.kmDelta || 0);
+
+        totalFuelSpend += spend;
+        totalLiters += lts;
+
+        if (!fuelStatsByType[fType]) {
+          fuelStatsByType[fType] = { km: 0, liters: 0, avgKmL: 0 };
+        }
+        fuelStatsByType[fType].liters += lts;
+        fuelStatsByType[fType].km += kmDelta;
       }
+    });
+
+    Object.keys(fuelStatsByType).forEach((key) => {
+      const item = fuelStatsByType[key];
+      item.avgKmL = item.liters > 0 && item.km > 0 ? Number((item.km / item.liters).toFixed(2)) : 0;
     });
 
     // Gastos com Manutenção e Peças
@@ -515,6 +610,7 @@ export const FleetProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         totalPartsSpend,
         totalLaborSpend,
         totalLiters,
+        fuelEfficiencyByType: fuelStatsByType,
       },
       upcomingMaintenances,
       pendingEventsCount: pendingEventsList.length,
@@ -845,16 +941,12 @@ export const FleetProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     vehicleId: string;
   }) => {
     try {
-      const authHeaders = await getApiAuthHeaders(
-        currentCompany?.id || 'comp-translog-01',
-        currentUser?.id || 'usr-default',
-        currentUser?.role || 'motorista'
-      );
       const res = await fetch('/api/ai/extract-receipt', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          ...authHeaders,
+          'x-company-id': currentCompany?.id || 'emp-default',
+          'x-user-id': currentUser?.id || 'usr-default',
         },
         body: JSON.stringify(payload),
       });
@@ -883,16 +975,12 @@ export const FleetProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     vehicleId: string;
   }) => {
     try {
-      const authHeaders = await getApiAuthHeaders(
-        currentCompany?.id || 'comp-translog-01',
-        currentUser?.id || 'usr-default',
-        currentUser?.role || 'motorista'
-      );
       const res = await fetch('/api/ai/inspect-vehicle', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          ...authHeaders,
+          'x-company-id': currentCompany?.id || 'emp-default',
+          'x-user-id': currentUser?.id || 'usr-default',
         },
         body: JSON.stringify(payload),
       });
@@ -934,14 +1022,10 @@ export const FleetProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const fetchDailyInsights = async (): Promise<DailyFleetInsights | null> => {
     if (!currentCompany) return null;
     try {
-      const authHeaders = await getApiAuthHeaders(
-        currentCompany.id,
-        currentUser?.id || 'usr-admin',
-        'administrativo'
-      );
       const res = await fetch('/api/ai/daily-insights', {
         headers: {
-          ...authHeaders,
+          'x-company-id': currentCompany.id,
+          'x-user-id': currentUser?.id || 'usr-admin',
         },
       });
       const data = await res.json();
@@ -961,16 +1045,12 @@ export const FleetProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const runBatchInsightsJob = async () => {
     if (!currentCompany) return { success: false, error: 'Nenhuma empresa selecionada.' };
     try {
-      const authHeaders = await getApiAuthHeaders(
-        currentCompany.id,
-        currentUser?.id || 'usr-admin',
-        'administrativo'
-      );
       const res = await fetch('/api/ai/run-batch-insights', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          ...authHeaders,
+          'x-company-id': currentCompany.id,
+          'x-user-id': currentUser?.id || 'usr-admin',
         },
       });
       const data = await res.json();
@@ -997,16 +1077,12 @@ export const FleetProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   }) => {
     if (!currentCompany) return { success: false, error: 'Nenhuma empresa selecionada.' };
     try {
-      const authHeaders = await getApiAuthHeaders(
-        currentCompany.id,
-        currentUser?.id || 'usr-admin',
-        'administrativo'
-      );
       const res = await fetch('/api/ai/schedule-predictive-maintenance', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          ...authHeaders,
+          'x-company-id': currentCompany.id,
+          'x-user-id': currentUser?.id || 'usr-admin',
         },
         body: JSON.stringify(payload),
       });

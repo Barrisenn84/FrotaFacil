@@ -186,7 +186,7 @@ export const VehiclesTab: React.FC<VehiclesTabProps> = ({
                           <div className="flex items-center justify-between text-[11px]">
                             <span className="flex items-center gap-1 text-slate-400">
                               <Sparkles className="w-3 h-3 text-indigo-400" />
-                              <span>Health Score IA:</span>
+                              <span>Saúde do Veículo:</span>
                             </span>
                             <span className="font-black text-emerald-400">
                               {health.healthScore}/100 • {health.statusTremDeForca}
@@ -194,7 +194,7 @@ export const VehiclesTab: React.FC<VehiclesTabProps> = ({
                           </div>
 
                           <div className="flex items-center justify-between text-[11px]">
-                            <span className="text-slate-400">Valor FIPE Est.:</span>
+                            <span className="text-slate-400">Valor Tabela FIPE:</span>
                             <span className="font-bold text-amber-300">
                               R$ {fipe.valorEstimadoBrl.toLocaleString('pt-BR')}
                             </span>
@@ -206,7 +206,7 @@ export const VehiclesTab: React.FC<VehiclesTabProps> = ({
                             className="w-full mt-1.5 py-1 px-2.5 bg-indigo-500/10 hover:bg-indigo-500/20 border border-indigo-500/30 text-indigo-300 hover:text-white font-bold text-[10px] rounded-lg flex items-center justify-center gap-1.5 transition cursor-pointer"
                           >
                             <Sparkles className="w-3 h-3 text-indigo-400" />
-                            <span>Diagnóstico IA 360° & TCO</span>
+                            <span>Diagnóstico Completo do Veículo</span>
                           </button>
                         </div>
                       );

@@ -217,7 +217,7 @@ export const OCRConfirmation: React.FC<OCRConfirmationProps> = ({
           </div>
           <div>
             <div className="text-xs font-bold uppercase tracking-wider text-amber-400">
-              Conferência Inteligente IA
+              Conferência do Comprovante
             </div>
             <h2 className="text-lg sm:text-xl font-extrabold text-white">
               {isFuel ? 'Abastecimento' : 'Manutenção'} — {vehicle.plate}
@@ -231,15 +231,15 @@ export const OCRConfirmation: React.FC<OCRConfirmationProps> = ({
         </div>
       </div>
 
-      {/* Alerta de Odômetro Menor que o Anterior (Odômetro Decrescente) */}
+      {/* Alerta de Odômetro Menor que o Anterior */}
       {isOdometerRegressed && (
         <div className="mb-5 p-4 rounded-2xl bg-rose-500/15 border border-rose-500/40 text-rose-200 space-y-2">
           <div className="flex items-center gap-2 font-bold text-xs">
             <ShieldAlert className="w-4 h-4 text-rose-400 shrink-0" />
-            <span>Aviso de Inconsistência: Odômetro Menor que o Anterior</span>
+            <span>Atenção: A quilometragem informada é menor que a anterior</span>
           </div>
           <p className="text-xs text-rose-300">
-            O odômetro digitado (<strong>{odometer.toLocaleString()} km</strong>) é menor que a quilometragem atual do veículo no sistema (<strong>{vehicle.current_km.toLocaleString()} km</strong>).
+            A quilometragem digitada (<strong>{odometer.toLocaleString()} km</strong>) está menor do que a última registrada para este veículo (<strong>{vehicle.current_km.toLocaleString()} km</strong>).
           </p>
           <div className="flex flex-wrap gap-2 pt-1">
             <button
@@ -247,7 +247,7 @@ export const OCRConfirmation: React.FC<OCRConfirmationProps> = ({
               onClick={() => setOdometer(vehicle.current_km)}
               className="px-3 py-1.5 rounded-lg bg-emerald-500 text-slate-950 font-bold text-xs hover:bg-emerald-400 transition cursor-pointer"
             >
-              Corrigir para {vehicle.current_km.toLocaleString()} km
+              Usar {vehicle.current_km.toLocaleString()} km
             </button>
             <button
               type="button"
@@ -299,7 +299,7 @@ export const OCRConfirmation: React.FC<OCRConfirmationProps> = ({
         <div className="mb-6 p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30">
           <div className="flex items-center gap-2 text-xs font-bold text-amber-300 uppercase tracking-wider mb-2.5">
             <Sparkles className="w-4 h-4 text-amber-400" />
-            <span>Sugestões da IA (Toque para Confirmar um Valor)</span>
+            <span>Valores Identificados (Toque para confirmar)</span>
           </div>
 
           <div className="space-y-3">
@@ -338,7 +338,7 @@ export const OCRConfirmation: React.FC<OCRConfirmationProps> = ({
                       {quickAnswers[q.id] === q.suggestedValue && (
                         <Check className="w-3.5 h-3.5 inline mr-1" />
                       )}
-                      Usar Sugestão: {q.suggestedValue}
+                      Usar Valor: {q.suggestedValue}
                     </button>
                   ) : null}
                 </div>
@@ -355,7 +355,7 @@ export const OCRConfirmation: React.FC<OCRConfirmationProps> = ({
           <div className="flex items-center justify-between mb-1.5">
             <label className="text-xs font-bold text-slate-300 flex items-center gap-1.5">
               <Gauge className="w-3.5 h-3.5 text-amber-400" />
-              <span>Odômetro Atual (KM) *</span>
+              <span>Quilometragem do Painel (KM) *</span>
             </label>
             {renderConfidenceBadge('odometro')}
           </div>
@@ -384,7 +384,7 @@ export const OCRConfirmation: React.FC<OCRConfirmationProps> = ({
           {isOdometerRegressed && (
             <div className="mt-3 p-3 bg-rose-500/10 border border-rose-500/30 rounded-xl">
               <label className="block text-xs font-bold text-rose-300 mb-1">
-                Justificativa Obrigatória de Retificação do Odômetro:
+                Por que a quilometragem está menor? (Ex: troca de painel ou conserto):
               </label>
               <input
                 type="text"
@@ -579,11 +579,11 @@ export const OCRConfirmation: React.FC<OCRConfirmationProps> = ({
             className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-extrabold text-xs flex items-center gap-2 transition shadow-lg shadow-amber-500/20 cursor-pointer disabled:opacity-50"
           >
             {isSubmitting ? (
-              <span>Salvando no Firestore...</span>
+              <span>Salvando no Sistema...</span>
             ) : (
               <>
                 <CheckCircle2 className="w-4 h-4" />
-                <span>Confirmar & Salvar Registro</span>
+                <span>Confirmar e Salvar</span>
               </>
             )}
           </button>

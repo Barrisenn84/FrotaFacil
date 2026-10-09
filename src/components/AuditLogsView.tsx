@@ -61,10 +61,10 @@ export const AuditLogsView: React.FC = () => {
           </span>
           <h1 className="text-2xl font-black text-white flex items-center gap-2">
             <ShieldCheck className="w-6 h-6 text-amber-400" />
-            <span>Trilha de Auditoria e Logs Estruturados</span>
+            <span>Histórico de Auditoria & Segurança da Frota</span>
           </h1>
           <p className="text-xs text-slate-400">
-            Registro imutável de todas as ações operacionais, alterações de odômetro e confirmações de comprovantes
+            Registro seguro de todas as ações feitas no sistema: comprovantes aprovados, alterações de km e cadastros
           </p>
         </div>
 
@@ -75,7 +75,7 @@ export const AuditLogsView: React.FC = () => {
           className="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold rounded-xl flex items-center gap-2 border border-slate-700 transition cursor-pointer"
         >
           <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin' : ''}`} />
-          <span>Atualizar Trilha</span>
+          <span>Atualizar Histórico</span>
         </button>
       </div>
 

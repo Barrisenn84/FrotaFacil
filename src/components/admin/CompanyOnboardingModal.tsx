@@ -116,7 +116,7 @@ export const CompanyOnboardingModal: React.FC<CompanyOnboardingModalProps> = ({
         <div>
           <div className="flex items-center gap-2 text-xs font-black uppercase tracking-wider text-amber-400 mb-1">
             <Sparkles className="w-3.5 h-3.5" />
-            <span>Onboarding da Empresa • Passo {step} de 3</span>
+            <span>Cadastro da Empresa • Etapa {step} de 3</span>
           </div>
           <h2 className="text-xl font-black text-white">
             {step === 1 && 'Configurações Principais da Empresa'}
@@ -334,7 +334,7 @@ export const CompanyOnboardingModal: React.FC<CompanyOnboardingModalProps> = ({
               className="px-6 py-2.5 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black text-xs flex items-center gap-2 cursor-pointer shadow-lg shadow-emerald-500/20 disabled:opacity-50"
             >
               <CheckCircle2 className="w-4 h-4" />
-              <span>{isCreatingSheets ? 'Criando Planilha...' : 'Concluir Onboarding & Salvar'}</span>
+              <span>{isCreatingSheets ? 'Criando Planilha...' : 'Concluir Cadastro & Salvar Empresa'}</span>
             </button>
           )}
         </div>

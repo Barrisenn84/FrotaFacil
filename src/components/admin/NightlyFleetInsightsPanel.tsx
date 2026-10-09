@@ -66,14 +66,14 @@ export const NightlyFleetInsightsPanel: React.FC = () => {
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h2 className="text-lg font-black text-white">Inteligência Noturna Multiagente</h2>
+              <h2 className="text-lg font-black text-white">Auditoria Inteligente da Frota</h2>
               <span className="text-[10px] uppercase font-black px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 flex items-center gap-1">
                 <Cpu className="w-3 h-3" />
-                Batch API • Context Caching
+                Análise Automática Noturna
               </span>
             </div>
             <p className="text-xs text-slate-400 mt-0.5">
-              4 agentes autônomos (Fiscal, Mecânico, Financeiro e Compliance) analisando a frota inteira
+              4 verificações automáticas (Preços de Combustível, Manutenções, Gastos e Regras) cuidando da sua frota
             </p>
           </div>
         </div>
@@ -85,7 +85,7 @@ export const NightlyFleetInsightsPanel: React.FC = () => {
           className="px-4 py-2.5 rounded-2xl bg-gradient-to-r from-indigo-500 via-purple-500 to-cyan-500 hover:from-indigo-400 hover:to-cyan-400 text-slate-950 font-black text-xs flex items-center justify-center gap-2 shadow-lg shadow-indigo-500/20 transition cursor-pointer active:scale-95 disabled:opacity-50"
         >
           <RefreshCw className={`w-4 h-4 ${isRunningBatch ? 'animate-spin' : ''}`} />
-          <span>{isRunningBatch ? 'Executando Análise da Frota...' : 'Rodar Job Noturno Agora (Batch API)'}</span>
+          <span>{isRunningBatch ? 'Executando Análise da Frota...' : 'Executar Análise Completa da Frota Agora'}</span>
         </button>
       </div>
 
@@ -125,8 +125,8 @@ export const NightlyFleetInsightsPanel: React.FC = () => {
         >
           <Search className="w-4 h-4 shrink-0" />
           <div>
-            <span className="text-xs font-bold block">1. Agente Fiscal</span>
-            <span className="text-[10px] opacity-80 block">Grounding ANP</span>
+            <span className="text-xs font-bold block">1. Auditoria de Preços</span>
+            <span className="text-[10px] opacity-80 block">Preços Oficiais ANP</span>
           </div>
         </button>
 
@@ -188,10 +188,10 @@ export const NightlyFleetInsightsPanel: React.FC = () => {
           <div className="p-4 bg-amber-500/10 border border-amber-500/30 rounded-2xl flex items-center justify-between text-xs">
             <div className="space-y-1">
               <span className="text-[10px] font-black uppercase text-amber-400">
-                Grounding com Google Search • Média de Combustíveis ANP
+                Pesquisa Oficial de Preços de Combustíveis da ANP no Brasil
               </span>
               <p className="text-slate-200">
-                O Agente Fiscal pesquisou os preços médios praticados na cidade e identificou abastecimentos acima da curva de mercado.
+                O sistema pesquisou os preços médios praticados na cidade e identificou abastecimentos acima da curva de mercado.
               </p>
             </div>
             <div className="text-right">
@@ -251,7 +251,7 @@ export const NightlyFleetInsightsPanel: React.FC = () => {
                 {comp.sourceUri && (
                   <div className="flex items-center gap-2 text-[11px] text-slate-400 pt-1">
                     <Search className="w-3.5 h-3.5 text-cyan-400" />
-                    <span>Fonte Grounding:</span>
+                    <span>Fonte Oficial de Consulta:</span>
                     <a
                       href={comp.sourceUri}
                       target="_blank"

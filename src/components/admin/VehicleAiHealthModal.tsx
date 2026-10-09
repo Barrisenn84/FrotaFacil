@@ -46,7 +46,7 @@ export const VehicleAiHealthModal: React.FC<VehicleAiHealthModalProps> = ({
             <div>
               <div className="flex items-center gap-2">
                 <h3 className="text-base font-black text-white">
-                  Diagnóstico Preditivo de IA & TCO FIPE
+                  Diagnóstico Completo do Veículo & Valor de Mercado (FIPE)
                 </h3>
                 <span className="px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 text-[10px] font-bold">
                   {vehicle.plate}
@@ -74,17 +74,17 @@ export const VehicleAiHealthModal: React.FC<VehicleAiHealthModalProps> = ({
             {/* Health Score */}
             <div className="p-4 bg-slate-950 border border-slate-800 rounded-2xl flex flex-col justify-between">
               <div>
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Health Score IA</span>
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Saúde Geral do Veículo</span>
                 <div className="text-2xl font-black text-emerald-400 mt-1 flex items-baseline gap-1">
                   <span>{health.healthScore}</span>
                   <span className="text-xs text-slate-500">/ 100</span>
                 </div>
                 <div className="text-xs font-semibold text-emerald-400/90 mt-0.5">
-                  Trem de Força: {health.statusTremDeForca.toUpperCase()}
+                  Motor e Câmbio: {health.statusTremDeForca.toUpperCase()}
                 </div>
               </div>
               <div className="mt-3 pt-2.5 border-t border-slate-800/80 text-[10px] text-slate-500">
-                Baseado em telemetria e preventivas
+                Baseado no histórico de uso e revisões
               </div>
             </div>
 
@@ -110,14 +110,14 @@ export const VehicleAiHealthModal: React.FC<VehicleAiHealthModalProps> = ({
               <div>
                 <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Curva de Consumo</span>
                 <div className="text-2xl font-black text-sky-400 mt-1">
-                  Nominal
+                  Normal
                 </div>
                 <div className="text-xs font-semibold text-slate-300 mt-0.5">
-                  Desvio: +{health.desvioConsumoCombustivelPercent}%
+                  Variação: +{health.desvioConsumoCombustivelPercent}%
                 </div>
               </div>
               <div className="mt-3 pt-2.5 border-t border-slate-800/80 text-[10px] text-slate-500">
-                Dentro do padrão nominal de fábrica
+                Dentro do padrão original de fábrica
               </div>
             </div>
           </div>
@@ -126,7 +126,7 @@ export const VehicleAiHealthModal: React.FC<VehicleAiHealthModalProps> = ({
           <div className="p-4 rounded-2xl bg-indigo-950/40 border border-indigo-500/30 space-y-2">
             <div className="flex items-center gap-2 text-indigo-300 font-bold text-xs uppercase tracking-wider">
               <Calendar className="w-4 h-4 text-indigo-400" />
-              <span>Momento Ótimo de Substituição / Venda (TCO Break-even)</span>
+              <span>Momento Ideal para Trocar ou Vender o Veículo</span>
             </div>
             <p className="text-xs text-slate-200 leading-relaxed">
               {fipe.pontoOtimoSubstituicao.recomendacao}

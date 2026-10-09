@@ -258,13 +258,13 @@ export const DataAnalyticsScreen: React.FC = () => {
         <div>
           <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-amber-400">
             <BarChart3 className="w-4 h-4 text-amber-400" />
-            <span>Inteligência Analítica & Recharts</span>
+            <span>Análise Visual e Gráficos da Frota</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight mt-0.5">
             Análise de Dados de Consumo & Gastos
           </h1>
           <p className="text-xs text-slate-400 mt-1">
-            Consumo médio de combustível (KM/L) e evolução financeira com insights automatizados por IA Gemini 3.8 Flash.
+            Consumo médio de combustível (KM/L) e evolução financeira com análises inteligentes automáticas.
           </p>
         </div>
 
