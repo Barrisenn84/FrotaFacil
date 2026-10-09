@@ -18,8 +18,9 @@ const app = express();
 // Configurar proxy reverso para contêiner Cloud Run / AI Studio
 app.set('trust proxy', 1);
 
-// Configuração de porta dinâmica (Railway / Cloud Run injetam process.env.PORT)
-const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
+// Environment constraint: Railway proxy público espera porta 3000
+const PORT = 3000;
+const ALT_PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : null;
 const isProd = process.env.NODE_ENV === 'production';
 
 // Endpoint de integridade (Health Check) imediato para Railway e balanceadores de carga
@@ -287,20 +288,19 @@ async function startServer() {
     });
   }
 
-  const server = app.listen(PORT, '0.0.0.0', () => {
+  app.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 FrotaFácil AI Enterprise Server running at http://0.0.0.0:${PORT} [env: ${isProd ? 'production' : 'development'}]`);
   });
 
-  const shutdown = () => {
-    console.log('Finalizando servidor HTTP graciosamente...');
-    server.close(() => {
-      console.log('Servidor HTTP encerrado com sucesso.');
-      process.exit(0);
-    });
-  };
-
-  process.on('SIGTERM', shutdown);
-  process.on('SIGINT', shutdown);
+  if (ALT_PORT && ALT_PORT !== PORT) {
+    try {
+      app.listen(ALT_PORT, '0.0.0.0', () => {
+        console.log(`🚀 FrotaFácil também escutando na porta Railway env: ${ALT_PORT}`);
+      });
+    } catch (e) {
+      console.warn(`Aviso ao iniciar porta secundária ${ALT_PORT}:`, e);
+    }
+  }
 }
 
 startServer();
