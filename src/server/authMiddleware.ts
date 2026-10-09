@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import crypto from 'crypto';
 import { db } from './db.js';
 import { User, Company } from './types.js';
 
@@ -120,3 +121,70 @@ export function requireAdmin(req: AuthenticatedRequest, res: Response, next: Nex
   }
   next();
 }
+
+const JWT_SECRET = process.env.JWT_SECRET || 'frotafacil-enterprise-secret-key-2026';
+
+function base64UrlEncode(str: string): string {
+  return Buffer.from(str)
+    .toString('base64')
+    .replace(/=/g, '')
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_');
+}
+
+function base64UrlDecode(str: string): string {
+  let base64 = str.replace(/-/g, '+').replace(/_/g, '/');
+  while (base64.length % 4) {
+    base64 += '=';
+  }
+  return Buffer.from(base64, 'base64').toString('utf-8');
+}
+
+export function generateAuthToken(user: any, company: any): string {
+  const header = JSON.stringify({ alg: 'HS256', typ: 'JWT' });
+  const payload = JSON.stringify({
+    userId: user.id || user.userId,
+    companyId: company.id || company.companyId,
+    name: user.name,
+    role: user.role,
+    iat: Math.floor(Date.now() / 1000),
+    exp: Math.floor(Date.now() / 1000) + 86400 * 7,
+  });
+
+  const encodedHeader = base64UrlEncode(header);
+  const encodedPayload = base64UrlEncode(payload);
+  const signature = crypto
+    .createHmac('sha256', JWT_SECRET)
+    .update(`${encodedHeader}.${encodedPayload}`)
+    .digest('base64')
+    .replace(/=/g, '')
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_');
+
+  return `${encodedHeader}.${encodedPayload}.${signature}`;
+}
+
+export function verifyAuthToken(token: string): any | null {
+  try {
+    const parts = token.split('.');
+    if (parts.length !== 3) return null;
+    const [encodedHeader, encodedPayload, signature] = parts;
+    const expectedSignature = crypto
+      .createHmac('sha256', JWT_SECRET)
+      .update(`${encodedHeader}.${encodedPayload}`)
+      .digest('base64')
+      .replace(/=/g, '')
+      .replace(/\+/g, '-')
+      .replace(/\//g, '_');
+
+    if (signature !== expectedSignature) return null;
+
+    const payload = JSON.parse(base64UrlDecode(encodedPayload));
+    if (payload.exp && payload.exp < Math.floor(Date.now() / 1000)) return null;
+
+    return payload;
+  } catch {
+    return null;
+  }
+}
+

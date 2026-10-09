@@ -18,9 +18,19 @@ const app = express();
 // Configurar proxy reverso para contêiner Cloud Run / AI Studio
 app.set('trust proxy', 1);
 
-// Environment constraint: Dev server must run on port 3000
-const PORT = 3000;
+// Configuração de porta dinâmica (Railway / Cloud Run injetam process.env.PORT)
+const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
 const isProd = process.env.NODE_ENV === 'production';
+
+// Endpoint de integridade (Health Check) imediato para Railway e balanceadores de carga
+app.get(['/health', '/api/health'], (req, res) => {
+  res.status(200).json({
+    status: 'ok',
+    environment: isProd ? 'production' : 'development',
+    uptime: Math.floor(process.uptime()),
+    timestamp: new Date().toISOString(),
+  });
+});
 
 // 1. Segurança com Helmet e CORS (configurados para permitir carregamento fluido no iframe do AI Studio)
 app.use(
@@ -277,9 +287,20 @@ async function startServer() {
     });
   }
 
-  app.listen(PORT, '0.0.0.0', () => {
-    console.log(`🚀 FrotaFácil AI Enterprise Server running at http://0.0.0.0:${PORT}`);
+  const server = app.listen(PORT, '0.0.0.0', () => {
+    console.log(`🚀 FrotaFácil AI Enterprise Server running at http://0.0.0.0:${PORT} [env: ${isProd ? 'production' : 'development'}]`);
   });
+
+  const shutdown = () => {
+    console.log('Finalizando servidor HTTP graciosamente...');
+    server.close(() => {
+      console.log('Servidor HTTP encerrado com sucesso.');
+      process.exit(0);
+    });
+  };
+
+  process.on('SIGTERM', shutdown);
+  process.on('SIGINT', shutdown);
 }
 
 startServer();
